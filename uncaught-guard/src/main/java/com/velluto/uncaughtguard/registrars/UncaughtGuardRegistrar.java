@@ -29,7 +29,11 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
         logger.debug("Registering UncaughtGuard properties.");
 
         Class<? extends UncaughtGuardLoggingStrategy>[] strategies = (Class<? extends UncaughtGuardLoggingStrategy>[]) attrs.getClassArray("loggingStrategies");
-
+        if(strategies.length == 0) {
+            strategies = new Class[] { UncaughtGuardSystemErrorLoggingStrategy.class };
+            logger.debug("Retrieved empty logging strategies property, setting to default {}", UncaughtGuardSystemErrorLoggingStrategy.class.getSimpleName());
+        }
+        
         Class<? extends RuntimeException>[] excludedExceptions = (Class<? extends RuntimeException>[]) attrs.getClassArray("excludedExceptions");
         String httpResponseErrorMessage = attrs.getString("httpResponseErrorMessage");
         String logErrorMessage = attrs.getString("logErrorMessage");

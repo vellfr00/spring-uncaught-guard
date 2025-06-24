@@ -3,6 +3,7 @@ package com.velluto.uncaughtguard.annotations;
 import com.velluto.uncaughtguard.advices.UncaughtGuardRestControllerAdvice;
 import com.velluto.uncaughtguard.registrars.UncaughtGuardRegistrar;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardLoggingStrategy;
+import com.velluto.uncaughtguard.strategies.UncaughtGuardSystemErrorLoggingStrategy;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -12,7 +13,7 @@ import java.lang.annotation.*;
 @Documented
 @Import({ UncaughtGuardRegistrar.class, UncaughtGuardRestControllerAdvice.class })
 public @interface EnableUncaughtGuard {
-    Class<? extends UncaughtGuardLoggingStrategy>[] loggingStrategies() default { };
+    Class<? extends UncaughtGuardLoggingStrategy>[] loggingStrategies() default { UncaughtGuardSystemErrorLoggingStrategy.class };
 
     Class<? extends RuntimeException>[] excludedExceptions() default {};
 
