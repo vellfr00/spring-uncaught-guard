@@ -71,7 +71,7 @@ public class UncaughtGuardExceptionTrace {
             try {
                 wrappedRequest.getInputStream().readAllBytes();
             } catch (IOException e) {
-                logger.error("Error reading body from the request that did throw unhandled exception with assigned traceId: {}", traceId, e);
+                logger.warn("Error reading body from the request that did throw unhandled exception with assigned traceId: {}", traceId, e);
             }
         }
 
