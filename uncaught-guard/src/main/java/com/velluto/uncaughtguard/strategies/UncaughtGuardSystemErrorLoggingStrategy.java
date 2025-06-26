@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 @Component
-public class UncaughtGuardSystemErrorLoggingStrategy implements UncaughtGuardLoggingStrategy {
+public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggingStrategy {
     private final UncaughtGuardProperties properties;
 
     public UncaughtGuardSystemErrorLoggingStrategy(UncaughtGuardProperties properties) {

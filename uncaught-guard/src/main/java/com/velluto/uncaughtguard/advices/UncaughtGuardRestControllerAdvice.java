@@ -4,6 +4,7 @@ import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTraceHttpResponseDTO;
 import com.velluto.uncaughtguard.properties.UncaughtGuardProperties;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardLoggingStrategy;
+import com.velluto.uncaughtguard.strategies.UncaughtGuardSystemErrorLoggingStrategy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +28,20 @@ public class UncaughtGuardRestControllerAdvice {
     }
 
     private void logExceptionTrace(UncaughtGuardExceptionTrace trace) {
+        int successfulLoggingCount = 0;
         for (Class<? extends UncaughtGuardLoggingStrategy> loggingStrategy : properties.getLoggingStrategies()) {
             logger.debug("Logging exception trace with assigned Trace ID: {} using specified logging strategy {}", trace.getTraceId(), loggingStrategy.getSimpleName());
-            context.getBean(loggingStrategy).log(trace);
+
+            UncaughtGuardLoggingStrategy loggingStrategyBean = context.getBean(loggingStrategy);
+            boolean loggingSuccessfull = loggingStrategyBean.callLog(trace);
+            if(loggingSuccessfull)
+                successfulLoggingCount++;
+        }
+
+        if (successfulLoggingCount == 0) {
+            logger.warn("No logging strategies were able to log the exception trace with assigned Trace ID: {}, logging with default strategy", trace.getTraceId());
+            UncaughtGuardSystemErrorLoggingStrategy defaultLoggingStrategy = context.getBean(UncaughtGuardSystemErrorLoggingStrategy.class);
+            defaultLoggingStrategy.callLog(trace);
         }
     }
 
