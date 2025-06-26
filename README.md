@@ -13,6 +13,11 @@ With a focus on simplicity and developer productivity, it enables you to build r
 - 🛠️ **Highly Customizable**: Offers flexible customization options directly through the annotation, allowing you to adapt the library’s behavior to your specific needs.
 - 🔌 **Easily Extensible**: Provides extension points for custom exception logging, other than the ones already provided out-of-the-box, enabling seamless integration with your existing logging and monitoring infrastructure.
 
+### ⚙️ How It Works
+Spring Uncaught Guard utilizes Spring's `@RestControllerAdvice` mechanism to seamlessly intercept uncaught exceptions thrown by your REST controllers. By default, it is configured to handle all exceptions that are subclasses of `RuntimeException`, which are commonly used for application-specific errors.
+If you have defined a custom `@RestControllerAdvice` for a specific exception type, your custom handler will take precedence, and those exceptions will not be intercepted by this library. This ensures you retain full control and flexibility over exception handling for known cases, while Spring Uncaught Guard acts as a safety net for truly unexpected errors.
+When an uncaught exception occurs, the library automatically captures comprehensive details—including the stack trace, request headers, cookies, and body content—and assigns a unique trace identifier (`traceId`) to the event. These details are then logged using your chosen logging strategies, and a standardized error response containing the `traceId` is returned to the client, making debugging and error tracking straightforward.
+
 ## 🗂️ Project Structure
 - 📦 `uncaught-guard`: Contains the core library code.
 - 🧪 `uncaught-guard-test-app`: A sample Spring Boot application that demonstrates the library in action and serves as a testing ground.
@@ -49,6 +54,7 @@ The `@EnableUncaughtGuard` annotation provides several customization options:
 Advanced example:
 
 ```java
+@SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {CustomLoggingStrategy.class},
         excludedExceptions = {IllegalArgumentException.class},
