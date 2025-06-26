@@ -96,6 +96,13 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
 
             logger.debug("Successfully registered the specified logging strategy: {}", strategyClass.getName());
         }
+
+        // if the default system error logging strategy is not specified, register it anyways since it is used as a fallback
+        if (Arrays.stream(strategies).noneMatch(strategy -> strategy.equals(UncaughtGuardSystemErrorLoggingStrategy.class))) {
+            RootBeanDefinition beanDef = new RootBeanDefinition(UncaughtGuardSystemErrorLoggingStrategy.class);
+            registry.registerBeanDefinition("uncaughtGuardSystemErrorLoggingStrategy", beanDef);
+            logger.debug("Registered default logging strategy: {}", UncaughtGuardSystemErrorLoggingStrategy.class.getName());
+        }
     }
 
     private void registerRequestCachingFilter(BeanDefinitionRegistry registry, boolean enableLogRequestBody) {
