@@ -79,6 +79,15 @@ class UncaughtGuardRegistrarTest {
     }
 
     @Test
+    void testRegisterLoggingStrategiesBeansRegistersDefaultIfNotSpecified() throws Exception {
+        Method method = UncaughtGuardRegistrar.class.getDeclaredMethod("registerLoggingStrategiesBeans", BeanDefinitionRegistry.class, Class[].class);
+        method.setAccessible(true);
+        Class[] strategies = new Class[]{};
+        method.invoke(registrar, registry, strategies);
+        verify(registry).registerBeanDefinition(eq("uncaughtGuardSystemErrorLoggingStrategy"), any(RootBeanDefinition.class));
+    }
+
+    @Test
     void testRegisterRequestCachingFilterRegistersIfEnabled() throws Exception {
         Method method = UncaughtGuardRegistrar.class.getDeclaredMethod("registerRequestCachingFilter", BeanDefinitionRegistry.class, boolean.class);
         method.setAccessible(true);
