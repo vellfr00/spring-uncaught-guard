@@ -16,3 +16,60 @@ With a focus on simplicity and developer productivity, it enables you to build r
 ## 🗂️ Project Structure
 - 📦 `uncaught-guard`: Contains the core library code.
 - 🧪 `uncaught-guard-test-app`: A sample Spring Boot application that demonstrates the library in action and serves as a testing ground.
+
+## 🛠️ Usage
+
+Add the `@EnableUncaughtGuard` annotation to your main Spring Boot application class to enable automatic uncaught exception handling:
+
+```java
+@SpringBootApplication
+@EnableUncaughtGuard
+public class MySpringBootApplication { 
+    public static void main(String[] args) {
+                SpringApplication.run(MySpringBootApplication.class, args);
+    }
+}
+```
+
+In the simplest case, this is all you need to do. No configuration files or additional setup required!
+Just run your application, and it will automatically log uncaught exceptions in your REST controllers.
+
+### ⚙️ Annotation Features
+
+If you need more control over the behavior of the uncaught exception handling, you can customize it using the `@EnableUncaughtGuard` annotation.
+The `@EnableUncaughtGuard` annotation provides several customization options:
+
+- 📝 **loggingStrategies**: Specify one or more logging strategies (implementations of `UncaughtGuardLoggingStrategy`). Default: logs to System.err. You can use built-in strategies or create your own custom logging strategy.
+- 🚫 **excludedExceptions**: List exception types (subclasses of `RuntimeException`) to exclude from automatic handling.
+- 💬 **httpResponseErrorMessage**: Customize the error message returned in the HTTP response.
+- 🪵 **logErrorMessage**: Customize the error message that is logged.
+- 🔁 **keepThrowingExceptions**: If true, rethrows the exception after handling (disables the custom HTTP response and traceId).
+- 📦 **enableLogRequestBody**: If true (default), enables logging of the HTTP request body (may impact performance, but if not enabled you will miss request body logging).
+
+Advanced example:
+
+```java
+@EnableUncaughtGuard(
+        loggingStrategies = {CustomLoggingStrategy.class},
+        excludedExceptions = {IllegalArgumentException.class},
+        httpResponseErrorMessage = "Custom internal error message",
+        logErrorMessage = "Unhandled exception caught!",
+        keepThrowingExceptions = false,
+        enableLogRequestBody = true
+)
+public class MySpringBootApplication { 
+    public static void main(String[] args) {
+                SpringApplication.run(MySpringBootApplication.class, args);
+    }
+}
+```
+
+## 🪵 Logging Strategies
+
+You can use built-in logging strategies or create your own custom logging strategy by implementing the `UncaughtGuardLoggingStrategy` interface.
+
+### 🏗️ Built-in Logging Strategies
+
+Here are listed the built-in logging strategies:
+- 🖥️ **UncaughtGuardSystemErrLoggingStrategy**: Logs uncaught exceptions to `System.err`.
+- 📋 **UncaughtGuardSlf4jLoggingStrategy**: Logs uncaught exceptions using SLF4J (requires SLF4J dependency).
