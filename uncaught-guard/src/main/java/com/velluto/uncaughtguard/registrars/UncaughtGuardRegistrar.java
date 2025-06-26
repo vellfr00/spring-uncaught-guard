@@ -23,24 +23,42 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
     @SuppressWarnings("unchecked")
     public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry) {
         AnnotationAttributes attrs = AnnotationAttributes.fromMap(
-                metadata.getAnnotationAttributes(EnableUncaughtGuard.class.getName(), false)
+                metadata.getAnnotationAttributes(
+                        EnableUncaughtGuard.class.getName(), false)
         );
 
         logger.debug("Registering UncaughtGuard properties.");
 
-        Class<? extends UncaughtGuardLoggingStrategy>[] strategies = (Class<? extends UncaughtGuardLoggingStrategy>[]) attrs.getClassArray("loggingStrategies");
-        if(strategies.length == 0) {
-            strategies = new Class[] { UncaughtGuardSystemErrorLoggingStrategy.class };
-            logger.debug("Retrieved empty logging strategies property, setting to default {}", UncaughtGuardSystemErrorLoggingStrategy.class.getSimpleName());
-        }
-        
+        Class<? extends UncaughtGuardLoggingStrategy>[] strategies = getLoggingStrategies(attrs);
         Class<? extends RuntimeException>[] excludedExceptions = (Class<? extends RuntimeException>[]) attrs.getClassArray("excludedExceptions");
         String httpResponseErrorMessage = attrs.getString("httpResponseErrorMessage");
         String logErrorMessage = attrs.getString("logErrorMessage");
         boolean keepThrowingExceptions = attrs.getBoolean("keepThrowingExceptions");
         boolean enableLogRequestBody = attrs.getBoolean("enableLogRequestBody");
 
-        // Register the properties bean
+        registerPropertiesBean(registry, strategies, excludedExceptions, httpResponseErrorMessage, logErrorMessage, keepThrowingExceptions, enableLogRequestBody);
+        registerLoggingStrategiesBeans(registry, strategies);
+        registerRequestCachingFilter(registry ,enableLogRequestBody);
+    }
+
+    private Class<? extends UncaughtGuardLoggingStrategy>[] getLoggingStrategies(AnnotationAttributes attrs) {
+        Class<? extends UncaughtGuardLoggingStrategy>[] strategies = (Class<? extends UncaughtGuardLoggingStrategy>[]) attrs.getClassArray("loggingStrategies");
+        if (strategies.length == 0) {
+            logger.debug("Retrieved empty logging strategies property, setting to default {}", UncaughtGuardSystemErrorLoggingStrategy.class.getSimpleName());
+            return new Class[]{UncaughtGuardSystemErrorLoggingStrategy.class};
+        }
+        return strategies;
+    }
+
+    private void registerPropertiesBean(
+            BeanDefinitionRegistry registry,
+            Class<? extends UncaughtGuardLoggingStrategy>[] strategies,
+            Class<? extends RuntimeException>[] excludedExceptions,
+            String httpResponseErrorMessage,
+            String logErrorMessage,
+            boolean keepThrowingExceptions,
+            boolean enableLogRequestBody
+    ) {
         RootBeanDefinition def = new RootBeanDefinition(UncaughtGuardProperties.class);
         def.getPropertyValues().add("loggingStrategies", strategies);
         def.getPropertyValues().add("excludedExceptions", excludedExceptions);
@@ -49,6 +67,7 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
         def.getPropertyValues().add("keepThrowingExceptions", keepThrowingExceptions);
         def.getPropertyValues().add("enableLogRequestBody", enableLogRequestBody);
         registry.registerBeanDefinition("uncaughtGuardProperties", def);
+
         logger.debug("""
                         Successfully registered UncaughtGuard properties.
                         Registered properties:
@@ -67,21 +86,32 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
                 keepThrowingExceptions,
                 enableLogRequestBody
         );
+    }
 
-        // Register the logging strategies implementation beans
+    private void registerLoggingStrategiesBeans(BeanDefinitionRegistry registry, Class<? extends UncaughtGuardLoggingStrategy>[] strategies) {
         for (Class<? extends UncaughtGuardLoggingStrategy> strategyClass : strategies) {
             RootBeanDefinition beanDef = new RootBeanDefinition(strategyClass);
-            String beanName = strategyClass.getSimpleName().substring(0, 1).toLowerCase()
-                    + strategyClass.getSimpleName().substring(1);
+            String beanName = decapitalize(strategyClass.getSimpleName());
             registry.registerBeanDefinition(beanName, beanDef);
+
             logger.debug("Successfully registered the specified logging strategy: {}", strategyClass.getName());
         }
+    }
 
-        // Register the Request Content Caching filter, if enabled
-        if (enableLogRequestBody) {
-            RootBeanDefinition beanDef = new RootBeanDefinition(UncaughtGuardContentRequestCachingFilter.class);
-            registry.registerBeanDefinition("uncaughtGuardContentRequestCachingFilter", beanDef);
-            logger.debug("Successfully enabled request body logging, by registering the request content caching filter");
+    private void registerRequestCachingFilter(BeanDefinitionRegistry registry, boolean enableLogRequestBody) {
+        if (!enableLogRequestBody) {
+            logger.debug("Request body logging is disabled, skipping request content caching filter registration.");
+            return;
         }
+
+        RootBeanDefinition beanDef = new RootBeanDefinition(UncaughtGuardContentRequestCachingFilter.class);
+        registry.registerBeanDefinition("uncaughtGuardContentRequestCachingFilter", beanDef);
+
+        logger.debug("Successfully enabled request body logging, by registering the request content caching filter");
+    }
+
+    private String decapitalize(String name) {
+        if (name == null || name.isEmpty()) return name;
+        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
     }
 }
