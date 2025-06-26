@@ -1,8 +1,5 @@
 package com.velluto.uncaughtguard.registrars;
 
-import com.velluto.uncaughtguard.filters.UncaughtGuardContentRequestCachingFilter;
-import com.velluto.uncaughtguard.strategies.UncaughtGuardLoggingStrategy;
-import com.velluto.uncaughtguard.strategies.UncaughtGuardSlf4jLoggingStrategy;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardSystemErrorLoggingStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,12 +42,12 @@ class UncaughtGuardRegistrarTest {
     @Test
     void testGetLoggingStrategiesReturnsProvided() throws Exception {
         AnnotationAttributes attrs = new AnnotationAttributes();
-        attrs.put("loggingStrategies", new Class[]{UncaughtGuardSlf4jLoggingStrategy.class});
+        attrs.put("loggingStrategies", new Class[]{UncaughtGuardSystemErrorLoggingStrategy.class});
         Method method = UncaughtGuardRegistrar.class.getDeclaredMethod("getLoggingStrategies", AnnotationAttributes.class);
         method.setAccessible(true);
         Class[] result = (Class[]) method.invoke(registrar, attrs);
         assertEquals(1, result.length);
-        assertEquals(UncaughtGuardSlf4jLoggingStrategy.class, result[0]);
+        assertEquals(UncaughtGuardSystemErrorLoggingStrategy.class, result[0]);
     }
 
     @Test

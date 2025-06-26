@@ -1,7 +1,6 @@
 package com.velluto.uncaughtguard.annotations;
 
 import com.velluto.uncaughtguard.properties.UncaughtGuardProperties;
-import com.velluto.uncaughtguard.strategies.UncaughtGuardSlf4jLoggingStrategy;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardSystemErrorLoggingStrategy;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ public class EnableUncaughtGuardLoggingStrategiesPropertyTest {
     @SpringBootTest
     @ContextConfiguration(classes = EnableUncaughtGuardSpecifiedLoggingStrategiesTest.SpecifiedLoggingStrategiesTestConfiguration.class)
     class EnableUncaughtGuardSpecifiedLoggingStrategiesTest {
-        @EnableUncaughtGuard(loggingStrategies = {UncaughtGuardSystemErrorLoggingStrategy.class, UncaughtGuardSlf4jLoggingStrategy.class})
+        @EnableUncaughtGuard(loggingStrategies = {UncaughtGuardSystemErrorLoggingStrategy.class})
         static class SpecifiedLoggingStrategiesTestConfiguration {
             // This class is used to test the EnableUncaughtGuard annotation with custom logging strategies
             // It can be empty as the annotation itself is being tested
@@ -38,9 +37,8 @@ public class EnableUncaughtGuardLoggingStrategiesPropertyTest {
             UncaughtGuardProperties properties = applicationContext.getBean(UncaughtGuardProperties.class);
 
             assertNotNull(properties.getLoggingStrategies());
-            assertEquals(2, properties.getLoggingStrategies().length);
+            assertEquals(1, properties.getLoggingStrategies().length);
             assertTrue(Arrays.asList(properties.getLoggingStrategies()).contains(UncaughtGuardSystemErrorLoggingStrategy.class));
-            assertTrue(Arrays.asList(properties.getLoggingStrategies()).contains(UncaughtGuardSlf4jLoggingStrategy.class));
         }
     }
 

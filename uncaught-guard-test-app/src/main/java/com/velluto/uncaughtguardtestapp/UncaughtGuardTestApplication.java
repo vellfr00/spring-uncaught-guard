@@ -1,14 +1,11 @@
 package com.velluto.uncaughtguardtestapp;
 
 import com.velluto.uncaughtguard.annotations.EnableUncaughtGuard;
-import com.velluto.uncaughtguard.strategies.UncaughtGuardSlf4jLoggingStrategy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@EnableUncaughtGuard(
-        loggingStrategies = { UncaughtGuardSlf4jLoggingStrategy.class }
-)
+@EnableUncaughtGuard
 public class UncaughtGuardTestApplication {
     public static void main(String[] args) {
         SpringApplication.run(UncaughtGuardTestApplication.class, args);
