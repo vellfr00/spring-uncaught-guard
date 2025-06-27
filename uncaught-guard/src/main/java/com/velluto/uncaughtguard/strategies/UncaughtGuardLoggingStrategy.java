@@ -15,7 +15,7 @@ public abstract class UncaughtGuardLoggingStrategy {
      * @param exceptionTrace the full exception trace to log
      * @return true if the logging was successful, false otherwise
      */
-    public boolean callLog(UncaughtGuardExceptionTrace exceptionTrace) {
+    public final boolean callLog(UncaughtGuardExceptionTrace exceptionTrace) {
         try {
             log(exceptionTrace);
             return true;
