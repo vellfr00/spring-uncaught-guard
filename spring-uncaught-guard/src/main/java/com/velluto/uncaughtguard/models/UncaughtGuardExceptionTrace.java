@@ -3,8 +3,7 @@ package com.velluto.uncaughtguard.models;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -12,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class UncaughtGuardExceptionTrace {
-    private static final Logger logger = LoggerFactory.getLogger(UncaughtGuardExceptionTrace.class);
+    private static final Logger logger = Logger.getLogger(UncaughtGuardExceptionTrace.class);
 
     private final LocalDateTime incidentTimestamp;
     private final UUID traceId;
@@ -71,7 +70,7 @@ public class UncaughtGuardExceptionTrace {
             try {
                 wrappedRequest.getInputStream().readAllBytes();
             } catch (IOException e) {
-                logger.warn("Error reading body from the request that did throw unhandled exception with assigned traceId: {}", traceId, e);
+                logger.warning("Error reading body from the request that did throw unhandled exception with assigned traceId: {}", traceId, e);
             }
         }
 

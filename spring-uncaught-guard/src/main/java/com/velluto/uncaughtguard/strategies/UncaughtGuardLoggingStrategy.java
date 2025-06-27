@@ -1,11 +1,10 @@
 package com.velluto.uncaughtguard.strategies;
 
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 public abstract class UncaughtGuardLoggingStrategy {
-    Logger logger = LoggerFactory.getLogger(UncaughtGuardLoggingStrategy.class);
+    Logger logger = Logger.getLogger(UncaughtGuardLoggingStrategy.class.getName());
 
     /**
      * Calls the logging strategy to log the uncaught exception trace.
@@ -23,7 +22,7 @@ public abstract class UncaughtGuardLoggingStrategy {
             // get the name of the concrete class that extends this abstract class
             String className = this.getClass().getSimpleName();
 
-            logger.warn("Could not log uncaught exception with assigned Trace Id: {} with specified logging strategy {}", exceptionTrace.getTraceId(), className , e);
+            logger.warning("Could not log uncaught exception with assigned Trace Id: " + exceptionTrace.getTraceId() + " with specified logging strategy " + className + ". Exception: " + e);
             return false;
         }
     }
