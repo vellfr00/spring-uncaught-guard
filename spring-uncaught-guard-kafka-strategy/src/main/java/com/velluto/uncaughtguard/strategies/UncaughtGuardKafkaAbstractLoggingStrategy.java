@@ -3,7 +3,7 @@ package com.velluto.uncaughtguard.strategies;
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 import jakarta.annotation.PostConstruct;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
+import org.apache.kafka.common.serialization.UUIDSerializer;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
@@ -12,6 +12,7 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -25,7 +26,7 @@ public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends Uncaught
 
     private List<String> kafkaBootstrapServers;
     private String kafkaTopicName;
-    private KafkaTemplate<String, UncaughtGuardExceptionTrace> kafkaProducerTemplate;
+    private KafkaTemplate<UUID, UncaughtGuardExceptionTrace> kafkaProducerTemplate;
 
     /**
      * Developers must implement this method to provide the list of Kafka bootstrap servers.
@@ -94,17 +95,17 @@ public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends Uncaught
                 String.join(",", kafkaBootstrapServers));
         configProps.put(
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-                StringSerializer.class);
+                UUIDSerializer.class);
         configProps.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 JsonSerializer.class);
 
-        ProducerFactory<String, UncaughtGuardExceptionTrace> producerFactory = new DefaultKafkaProducerFactory<>(configProps);
+        ProducerFactory<UUID, UncaughtGuardExceptionTrace> producerFactory = new DefaultKafkaProducerFactory<>(configProps);
         this.kafkaProducerTemplate = new KafkaTemplate<>(producerFactory);
     }
 
     @Override
     protected final void log(UncaughtGuardExceptionTrace exceptionTrace) {
-        this.kafkaProducerTemplate.send(this.kafkaTopicName, exceptionTrace).join();
+        this.kafkaProducerTemplate.send(this.kafkaTopicName, exceptionTrace.getTraceId(), exceptionTrace).join();
     }
 }
