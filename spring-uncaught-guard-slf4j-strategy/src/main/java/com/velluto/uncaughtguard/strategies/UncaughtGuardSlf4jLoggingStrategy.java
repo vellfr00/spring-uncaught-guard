@@ -9,10 +9,6 @@ import java.util.logging.Logger;
 public class UncaughtGuardSlf4jLoggingStrategy extends UncaughtGuardLoggingStrategy {
     private static final Logger logger = Logger.getLogger(UncaughtGuardSlf4jLoggingStrategy.class.getName());
 
-    public String getLogErrorMessage() {
-        return properties.getLogErrorMessage();
-    }
-
     @Override
     public void log(UncaughtGuardExceptionTrace exceptionTrace) {
         // Get the class that threw the exception

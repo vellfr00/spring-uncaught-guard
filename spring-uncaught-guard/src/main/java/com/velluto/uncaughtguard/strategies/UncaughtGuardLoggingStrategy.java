@@ -13,6 +13,16 @@ public abstract class UncaughtGuardLoggingStrategy {
     protected UncaughtGuardProperties properties;
 
     /**
+     * Returns the error message to be logged when an uncaught exception occurs and before all the details of the exception trace.
+     * It is configured in the annotation property named "logErrorMessage" of @EnableUncaughtGuard.
+     *
+     * @return the error message to be logged
+     */
+    protected String getLogErrorMessage() {
+        return properties.getLogErrorMessage();
+    }
+
+    /**
      * Returns the class name that threw the exception.
      * This is determined by the first element in the stack trace of the throwable.
      *
