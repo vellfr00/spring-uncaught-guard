@@ -89,7 +89,6 @@ public class UncaughtGuardRestControllerAdviceTest {
 
     @Test
     void logExceptionTrace_fallbackToDefaultStrategyIfNoneSuccessful() throws Exception {
-        // Setup: nessuna strategia logga con successo
         UncaughtGuardLoggingStrategy failingStrategy = mock(UncaughtGuardLoggingStrategy.class);
         when(failingStrategy.callLog(any())).thenReturn(false);
         when(properties.getLoggingStrategies()).thenReturn(new Class[]{UncaughtGuardLoggingStrategy.class});
@@ -97,7 +96,7 @@ public class UncaughtGuardRestControllerAdviceTest {
         UncaughtGuardSystemErrorLoggingStrategy defaultStrategy = mock(UncaughtGuardSystemErrorLoggingStrategy.class);
         when(context.getBean(UncaughtGuardSystemErrorLoggingStrategy.class)).thenReturn(defaultStrategy);
         UncaughtGuardExceptionTrace trace = mock(UncaughtGuardExceptionTrace.class);
-        // Reflection per invocare il metodo privato
+
         java.lang.reflect.Method m = UncaughtGuardRestControllerAdvice.class.getDeclaredMethod("logExceptionTrace", UncaughtGuardExceptionTrace.class);
         m.setAccessible(true);
         m.invoke(advice, trace);
