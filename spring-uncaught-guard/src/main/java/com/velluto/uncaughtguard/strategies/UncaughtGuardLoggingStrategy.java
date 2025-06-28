@@ -25,6 +25,7 @@ public abstract class UncaughtGuardLoggingStrategy {
     /**
      * Returns the class name that threw the exception.
      * This is determined by the first element in the stack trace of the throwable.
+     * If the stack trace is empty or the exception is null, it returns the name of the current class.
      *
      * @param exceptionTrace the exception trace containing the throwable
      * @return the class name that threw the exception, or null if the stack trace is empty
@@ -47,6 +48,34 @@ public abstract class UncaughtGuardLoggingStrategy {
 
         logger.warning("Stack trace is empty. Returning the current class.");
         return this.getClass().getName();
+    }
+
+    /**
+     * Returns the name of the method that threw the exception.
+     * This is determined by the first element in the stack trace of the throwable.
+     * If the stack trace is empty or the exception is null, it returns "log".
+     *
+     * @param exceptionTrace the exception trace containing the throwable
+     * @return the name of the method that threw the exception, or "UnknownMethod" if the stack trace is empty
+     */
+    protected final String getThrowingMethodName(UncaughtGuardExceptionTrace exceptionTrace) {
+        if (exceptionTrace == null || exceptionTrace.getException() == null) {
+            logger.warning("Exception trace or exception is null. Returning the current method.");
+            return "log";
+        }
+
+        Throwable exception = exceptionTrace.getException();
+        if (exception == null || exception.getStackTrace() == null || exception.getStackTrace().length == 0) {
+            logger.warning("Exception is null or has no stack trace. Returning the current method.");
+            return "log";
+        }
+
+        StackTraceElement[] stackTrace = exception.getStackTrace();
+        if (stackTrace.length > 0)
+            return stackTrace[0].getMethodName();
+
+        logger.warning("Stack trace is empty. Returning the current method.");
+        return "log";
     }
 
     /**
