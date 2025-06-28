@@ -4,6 +4,7 @@ import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 import com.velluto.uncaughtguard.properties.UncaughtGuardProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -106,7 +107,13 @@ public abstract class UncaughtGuardLoggingStrategy {
             // get the name of the concrete class that extends this abstract class
             String className = this.getClass().getName();
 
-            logger.warning("Could not log uncaught exception with assigned Trace Id: " + exceptionTrace.getTraceId() + " with specified logging strategy " + className + ". Exception: " + e);
+            logger.logp(
+                    Level.WARNING,
+                    className,
+                    "callLog",
+                    "Could not log uncaught exception with assigned Trace Id: " + exceptionTrace.getTraceId() + " with specified logging strategy " + className,
+                    e);
+
             return false;
         }
     }
