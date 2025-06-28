@@ -3,6 +3,7 @@ package com.velluto.uncaughtguard.models;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class UncaughtGuardExceptionTrace {
-    private static final Logger logger = Logger.getLogger(UncaughtGuardExceptionTrace.class);
+    private static final Logger logger = Logger.getLogger(UncaughtGuardExceptionTrace.class.getName());
 
     private final LocalDateTime incidentTimestamp;
     private final UUID traceId;
@@ -70,8 +71,7 @@ public class UncaughtGuardExceptionTrace {
             try {
                 wrappedRequest.getInputStream().readAllBytes();
             } catch (IOException e) {
-                logger.warning("Error reading body from the request that did throw unhandled exception with assigned traceId: {}", traceId, e);
-            }
+                logger.log(Level.WARNING, "Error reading body from the request that did throw unhandled exception with assigned traceId: " + traceId, e);            }
         }
 
         // at this point we are sure the body was read, if this returns nothing then the body is actually empty
