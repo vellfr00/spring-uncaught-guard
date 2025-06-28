@@ -85,8 +85,21 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
         ));
     }
 
+    private void checkLoggingStrategyClassIsComponentAnnotated(Class<? extends UncaughtGuardLoggingStrategy> strategyClass) {
+        if (!strategyClass.isAnnotationPresent(org.springframework.stereotype.Component.class)) {
+            throw new IllegalArgumentException(
+                    "The specified logging strategy class " + strategyClass.getName() +
+                    " must be annotated with @Component to be registered as a bean."
+            );
+        }
+    }
+
     private void registerLoggingStrategiesBeans(BeanDefinitionRegistry registry, Class<? extends UncaughtGuardLoggingStrategy>[] strategies) {
         for (Class<? extends UncaughtGuardLoggingStrategy> strategyClass : strategies) {
+            // check if the strategy class is annotated with @Component, throw an exception if not and stop Spring from starting
+            checkLoggingStrategyClassIsComponentAnnotated(strategyClass);
+
+            // register the logging strategy as a bean definition
             RootBeanDefinition beanDef = new RootBeanDefinition(strategyClass);
             String beanName = decapitalize(strategyClass.getSimpleName());
             registry.registerBeanDefinition(beanName, beanDef);

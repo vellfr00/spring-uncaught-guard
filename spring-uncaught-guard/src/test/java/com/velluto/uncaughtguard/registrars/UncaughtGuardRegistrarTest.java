@@ -1,5 +1,7 @@
 package com.velluto.uncaughtguard.registrars;
 
+import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
+import com.velluto.uncaughtguard.strategies.UncaughtGuardLoggingStrategy;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardSystemErrorLoggingStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +10,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.stereotype.Component;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -112,5 +116,55 @@ class UncaughtGuardRegistrarTest {
         assertEquals("", method.invoke(registrar, ""));
         assertNull(method.invoke(registrar, (Object) null));
     }
-}
 
+    @Test
+    void testCheckLoggingStrategyClassIsComponentAnnotatedThrowsIfNotAnnotated() throws Exception {
+        class NotAComponent extends UncaughtGuardLoggingStrategy {
+            @Override
+            public void log(UncaughtGuardExceptionTrace exceptionTrace) {
+                // Left empty intentionally, for testing purposes it is not needed
+            }
+        }
+        Method method = UncaughtGuardRegistrar.class.getDeclaredMethod("checkLoggingStrategyClassIsComponentAnnotated", Class.class);
+        method.setAccessible(true);
+        InvocationTargetException ex = assertThrows(InvocationTargetException.class, () ->
+            method.invoke(registrar, NotAComponent.class)
+        );
+        Throwable cause = ex.getCause();
+        assertInstanceOf(IllegalArgumentException.class, cause);
+        assertTrue(cause.getMessage().contains("must be annotated with @Component"));
+    }
+
+    @Component
+    static class AnnotatedStrategy extends UncaughtGuardLoggingStrategy {
+        @Override
+        public void log(UncaughtGuardExceptionTrace exceptionTrace) {
+            // Left empty intentionally, for testing purposes it is not needed
+        }
+    }
+
+    @Test
+    void testCheckLoggingStrategyClassIsComponentAnnotatedDoesNotThrowIfAnnotated() throws Exception {
+        Method method = UncaughtGuardRegistrar.class.getDeclaredMethod("checkLoggingStrategyClassIsComponentAnnotated", Class.class);
+        method.setAccessible(true);
+        assertDoesNotThrow(() -> method.invoke(registrar, AnnotatedStrategy.class));
+    }
+
+    @Test
+    void testRegisterLoggingStrategiesBeansThrowsIfStrategyNotAnnotated() throws Exception {
+        class NotAComponent extends UncaughtGuardLoggingStrategy {
+            @Override
+            public void log(UncaughtGuardExceptionTrace exceptionTrace) {
+                // Left empty intentionally, for testing purposes it is not needed
+            }
+        }
+
+        Method method = UncaughtGuardRegistrar.class.getDeclaredMethod("registerLoggingStrategiesBeans", BeanDefinitionRegistry.class, Class[].class);
+        method.setAccessible(true);
+        Class[] strategies = new Class[]{NotAComponent.class};
+        Exception ex = assertThrows(Exception.class, () -> method.invoke(registrar, registry, strategies));
+        Throwable cause = ex.getCause();
+        assertTrue(cause instanceof IllegalArgumentException);
+        assertTrue(cause.getMessage().contains("must be annotated with @Component"));
+    }
+}
