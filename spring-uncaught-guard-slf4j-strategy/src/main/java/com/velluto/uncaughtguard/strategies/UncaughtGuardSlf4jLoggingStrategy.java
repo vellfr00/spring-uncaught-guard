@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
  * This strategy logs the exception details using the SLF4J logger associated with the class that threw the exception.
  * It requires the SLF4J library to be included in the project dependencies.
  */
-@Component
 public class UncaughtGuardSlf4jLoggingStrategy extends UncaughtGuardLoggingStrategy {
     @Override
     public void log(UncaughtGuardExceptionTrace exceptionTrace) {

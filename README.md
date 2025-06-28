@@ -100,8 +100,8 @@ public class MySpringBootApplication {
 ## 🪵 Logging Strategies
 
 You can use provided logging strategies or create your own custom logging strategy by extending the abstract
-`UncaughtGuardLoggingStrategy` class, implementing the abstract `log` method and annotate the your new implementation
-class as `@Component`.
+`UncaughtGuardLoggingStrategy` class and implementing the abstract `log` method.
+
 The log method receives an `UncaughtGuardException` object, which contains all the necessary details about the uncaught
 exception, including the stack trace, request data, and the unique trace identifier.
 
