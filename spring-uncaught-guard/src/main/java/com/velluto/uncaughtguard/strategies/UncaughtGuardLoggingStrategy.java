@@ -13,6 +13,33 @@ public abstract class UncaughtGuardLoggingStrategy {
     protected UncaughtGuardProperties properties;
 
     /**
+     * Returns the class name that threw the exception.
+     * This is determined by the first element in the stack trace of the throwable.
+     *
+     * @param exceptionTrace the exception trace containing the throwable
+     * @return the class name that threw the exception, or null if the stack trace is empty
+     */
+    protected final String getThrowingClassName(UncaughtGuardExceptionTrace exceptionTrace) {
+        if (exceptionTrace == null || exceptionTrace.getException() == null) {
+            logger.warning("Exception trace or exception is null. Returning the current class.");
+            return this.getClass().getName();
+        }
+
+        Throwable exception = exceptionTrace.getException();
+        if (exception == null || exception.getStackTrace() == null || exception.getStackTrace().length == 0) {
+            logger.warning("Exception is null or has no stack trace. Returning the current class.");
+            return this.getClass().getName();
+        }
+
+        StackTraceElement[] stackTrace = exception.getStackTrace();
+        if (stackTrace.length > 0)
+            return stackTrace[0].getClassName();
+
+        logger.warning("Stack trace is empty. Returning the current class.");
+        return this.getClass().getName();
+    }
+
+    /**
      * Calls the logging strategy to log the uncaught exception trace.
      * This is a wrapper method that handles any exceptions that may occur during the logging process.
      * It ensures that even if the logging fails, the application does not crash and provides a meaningful error message.
@@ -26,7 +53,7 @@ public abstract class UncaughtGuardLoggingStrategy {
             return true;
         } catch (Exception e) {
             // get the name of the concrete class that extends this abstract class
-            String className = this.getClass().getSimpleName();
+            String className = this.getClass().getName();
 
             logger.warning("Could not log uncaught exception with assigned Trace Id: " + exceptionTrace.getTraceId() + " with specified logging strategy " + className + ". Exception: " + e);
             return false;
@@ -38,5 +65,5 @@ public abstract class UncaughtGuardLoggingStrategy {
      *
      * @param exceptionTrace the full exception trace to log
      */
-    public abstract void log(UncaughtGuardExceptionTrace exceptionTrace);
+    protected abstract void log(UncaughtGuardExceptionTrace exceptionTrace);
 }
