@@ -29,7 +29,7 @@ public class UncaughtGuardRestControllerAdvice {
     private void logExceptionTrace(UncaughtGuardExceptionTrace trace) {
         int successfulLoggingCount = 0;
         for (Class<? extends UncaughtGuardLoggingStrategy> loggingStrategy : properties.getLoggingStrategies()) {
-            logger.info("Logging exception trace with assigned Trace ID: " + trace.getTraceId() + " using specified logging strategy " + loggingStrategy.getSimpleName());
+            logger.fine("Logging exception trace with assigned Trace ID: " + trace.getTraceId() + " using specified logging strategy " + loggingStrategy.getSimpleName());
             UncaughtGuardLoggingStrategy loggingStrategyBean = context.getBean(loggingStrategy);
             boolean loggingSuccessfull = loggingStrategyBean.callLog(trace);
             if(loggingSuccessfull)
@@ -44,11 +44,11 @@ public class UncaughtGuardRestControllerAdvice {
     }
 
     private boolean isExceptionExcluded(RuntimeException e) {
-        logger.info("Checking if exception of type " + e.getClass().getSimpleName() + " is excluded from handling");
+        logger.fine("Checking if exception of type " + e.getClass().getSimpleName() + " is excluded from handling");
         boolean isExcluded = Arrays.stream(properties.getExcludedExceptions()).anyMatch(excluded -> excluded.equals(e.getClass()));
 
         if(isExcluded)
-            logger.info("Exception of type " + e.getClass().getSimpleName() + " is specified to be excluded from handling, it will be thrown again");
+            logger.fine("Exception of type " + e.getClass().getSimpleName() + " is specified to be excluded from handling, it will be thrown again");
 
         return isExcluded;
     }
@@ -56,7 +56,7 @@ public class UncaughtGuardRestControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<UncaughtGuardExceptionTraceHttpResponseDTO> handleUncaughtExceptions(RuntimeException e, HttpServletRequest request) throws RuntimeException {
         UncaughtGuardExceptionTrace trace = new UncaughtGuardExceptionTrace(request, e, properties.isEnableLogRequestBody());
-        logger.info("Caught an unhandled exception of type " + e.getClass().getSimpleName() + ", assigned Trace ID: " + trace.getTraceId());
+        logger.fine("Caught an unhandled exception of type " + e.getClass().getSimpleName() + ", assigned Trace ID: " + trace.getTraceId());
 
         if (isExceptionExcluded(e))
             throw e;
@@ -64,11 +64,11 @@ public class UncaughtGuardRestControllerAdvice {
         logExceptionTrace(trace);
 
         if (properties.isKeepThrowingExceptions()) {
-            logger.info("Exceptions specified to keep throwing in properties, exception with assigned Trace ID: " + trace.getTraceId() + " will be thrown again");
+            logger.fine("Exceptions specified to keep throwing in properties, exception with assigned Trace ID: " + trace.getTraceId() + " will be thrown again");
             throw e;
         }
 
-        logger.info("Returning HTTP response with reference for exception with Trace ID: " + trace.getTraceId());
+        logger.fine("Returning HTTP response with reference for exception with Trace ID: " + trace.getTraceId());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(trace.getHttpResponseDTO(properties.getHttpResponseErrorMessage()));
     }
 }

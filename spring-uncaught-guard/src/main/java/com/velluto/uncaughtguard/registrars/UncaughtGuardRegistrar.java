@@ -26,7 +26,7 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
                         EnableUncaughtGuard.class.getName(), false)
         );
 
-        logger.info("Registering UncaughtGuard properties.");
+        logger.fine("Registering UncaughtGuard properties.");
 
         Class<? extends UncaughtGuardLoggingStrategy>[] strategies = getLoggingStrategies(attrs);
         Class<? extends RuntimeException>[] excludedExceptions = (Class<? extends RuntimeException>[]) attrs.getClassArray("excludedExceptions");
@@ -43,7 +43,7 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
     private Class<? extends UncaughtGuardLoggingStrategy>[] getLoggingStrategies(AnnotationAttributes attrs) {
         Class<? extends UncaughtGuardLoggingStrategy>[] strategies = (Class<? extends UncaughtGuardLoggingStrategy>[]) attrs.getClassArray("loggingStrategies");
         if (strategies.length == 0) {
-            logger.info("Retrieved empty logging strategies property, setting to default " + UncaughtGuardSystemErrorLoggingStrategy.class.getSimpleName());
+            logger.fine("Retrieved empty logging strategies property, setting to default " + UncaughtGuardSystemErrorLoggingStrategy.class.getSimpleName());
             return new Class[]{UncaughtGuardSystemErrorLoggingStrategy.class};
         }
         return strategies;
@@ -67,7 +67,7 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
         def.getPropertyValues().add("enableLogRequestBody", enableLogRequestBody);
         registry.registerBeanDefinition("uncaughtGuardProperties", def);
 
-        logger.info(String.format(
+        logger.fine(String.format(
                 "Successfully registered UncaughtGuard properties.\n" +
                 "Registered properties:\n\n" +
                 "loggingStrategies        : %s\n" +
@@ -104,27 +104,27 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
             String beanName = decapitalize(strategyClass.getSimpleName());
             registry.registerBeanDefinition(beanName, beanDef);
 
-            logger.info(String.format("Successfully registered the specified logging strategy: %s", strategyClass.getName()));
+            logger.fine(String.format("Successfully registered the specified logging strategy: %s", strategyClass.getName()));
         }
 
         // if the default system error logging strategy is not specified, register it anyways since it is used as a fallback
         if (Arrays.stream(strategies).noneMatch(strategy -> strategy.equals(UncaughtGuardSystemErrorLoggingStrategy.class))) {
             RootBeanDefinition beanDef = new RootBeanDefinition(UncaughtGuardSystemErrorLoggingStrategy.class);
             registry.registerBeanDefinition("uncaughtGuardSystemErrorLoggingStrategy", beanDef);
-            logger.info("Registered default logging strategy: " + UncaughtGuardSystemErrorLoggingStrategy.class.getName());
+            logger.fine("Registered default logging strategy: " + UncaughtGuardSystemErrorLoggingStrategy.class.getName());
         }
     }
 
     private void registerRequestCachingFilter(BeanDefinitionRegistry registry, boolean enableLogRequestBody) {
         if (!enableLogRequestBody) {
-            logger.info("Request body logging is disabled, skipping request content caching filter registration.");
+            logger.fine("Request body logging is disabled, skipping request content caching filter registration.");
             return;
         }
 
         RootBeanDefinition beanDef = new RootBeanDefinition(UncaughtGuardContentRequestCachingFilter.class);
         registry.registerBeanDefinition("uncaughtGuardContentRequestCachingFilter", beanDef);
 
-        logger.info("Successfully enabled request body logging, by registering the request content caching filter");
+        logger.fine("Successfully enabled request body logging, by registering the request content caching filter");
     }
 
     private String decapitalize(String name) {
