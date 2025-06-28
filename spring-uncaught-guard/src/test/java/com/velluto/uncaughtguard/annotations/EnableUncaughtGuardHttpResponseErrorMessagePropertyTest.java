@@ -7,14 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ContextConfiguration(classes = EnableUncaughtGuardHttpResponseErrorMessagePropertyTest.HttpResponseErrorMessageTestConfiguration.class)
 @EnableUncaughtGuard(httpResponseErrorMessage = "Custom error message")
 public class EnableUncaughtGuardHttpResponseErrorMessagePropertyTest {
-    static class HttpResponseErrorMessageTestConfiguration {}
-
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -22,5 +20,8 @@ public class EnableUncaughtGuardHttpResponseErrorMessagePropertyTest {
     void testHttpResponseErrorMessageProperty() {
         UncaughtGuardProperties properties = applicationContext.getBean(UncaughtGuardProperties.class);
         assertEquals("Custom error message", properties.getHttpResponseErrorMessage());
+    }
+
+    static class HttpResponseErrorMessageTestConfiguration {
     }
 }

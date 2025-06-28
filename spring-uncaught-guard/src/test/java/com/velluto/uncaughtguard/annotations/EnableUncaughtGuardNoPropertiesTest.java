@@ -14,12 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ContextConfiguration(classes = EnableUncaughtGuardNoPropertiesTest.EnableUncaughtGuardTestConfiguration.class)
 public class EnableUncaughtGuardNoPropertiesTest {
-    @EnableUncaughtGuard
-    static class EnableUncaughtGuardTestConfiguration {
-        // This class is used to test the EnableUncaughtGuard annotation
-        // It can be empty as the annotation itself is being tested
-    }
-
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -59,5 +53,11 @@ public class EnableUncaughtGuardNoPropertiesTest {
         assertTrue(properties.isEnableLogRequestBody());
 
         assertEquals(0, properties.getExcludedExceptions().length);
+    }
+
+    @EnableUncaughtGuard
+    static class EnableUncaughtGuardTestConfiguration {
+        // This class is used to test the EnableUncaughtGuard annotation
+        // It can be empty as the annotation itself is being tested
     }
 }

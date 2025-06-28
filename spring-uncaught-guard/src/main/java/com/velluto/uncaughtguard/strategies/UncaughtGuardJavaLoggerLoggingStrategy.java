@@ -25,19 +25,19 @@ public class UncaughtGuardJavaLoggerLoggingStrategy extends UncaughtGuardLogging
                 throwingClassName,
                 getThrowingMethodName(exceptionTrace),
                 String.format("""
-                       %s
-                       \s
-                       Trace ID     : %s
-                       Timestamp    : %s
-                       Method       : %s
-                       Path         : %s
-                       Query Params : %s
-                       Headers      : %s
-                       Body         :\s
-                       %s
-                       \s
-                       Exception    :\s
-                       \s""",
+                                %s
+                                \s
+                                Trace ID     : %s
+                                Timestamp    : %s
+                                Method       : %s
+                                Path         : %s
+                                Query Params : %s
+                                Headers      : %s
+                                Body         :\s
+                                %s
+                                \s
+                                Exception    :\s
+                                \s""",
                         getLogErrorMessage(),
                         exceptionTrace.getTraceId(),
                         exceptionTrace.getIncidentTimestamp(),

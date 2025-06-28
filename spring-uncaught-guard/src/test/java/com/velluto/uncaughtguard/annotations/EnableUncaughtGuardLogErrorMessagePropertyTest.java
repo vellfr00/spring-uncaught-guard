@@ -7,14 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @ContextConfiguration(classes = EnableUncaughtGuardLogErrorMessagePropertyTest.LogErrorMessageTestConfiguration.class)
 @EnableUncaughtGuard(logErrorMessage = "Custom log message")
 public class EnableUncaughtGuardLogErrorMessagePropertyTest {
-    static class LogErrorMessageTestConfiguration {}
-
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -22,5 +20,8 @@ public class EnableUncaughtGuardLogErrorMessagePropertyTest {
     void testLogErrorMessageProperty() {
         UncaughtGuardProperties properties = applicationContext.getBean(UncaughtGuardProperties.class);
         assertEquals("Custom log message", properties.getLogErrorMessage());
+    }
+
+    static class LogErrorMessageTestConfiguration {
     }
 }

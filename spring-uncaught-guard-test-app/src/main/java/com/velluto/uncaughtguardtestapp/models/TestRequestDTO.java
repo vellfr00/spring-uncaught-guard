@@ -3,7 +3,8 @@ package com.velluto.uncaughtguardtestapp.models;
 public class TestRequestDTO {
     private String data;
 
-    public TestRequestDTO() { }
+    public TestRequestDTO() {
+    }
 
     public String getData() {
         return data;

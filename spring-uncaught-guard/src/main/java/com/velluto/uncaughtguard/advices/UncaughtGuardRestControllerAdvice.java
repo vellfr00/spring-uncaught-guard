@@ -6,7 +6,6 @@ import com.velluto.uncaughtguard.properties.UncaughtGuardProperties;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardLoggingStrategy;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardSystemErrorLoggingStrategy;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.logging.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 @RestControllerAdvice
 public class UncaughtGuardRestControllerAdvice {
@@ -32,7 +32,7 @@ public class UncaughtGuardRestControllerAdvice {
             logger.fine("Logging exception trace with assigned Trace ID: " + trace.getTraceId() + " using specified logging strategy " + loggingStrategy.getSimpleName());
             UncaughtGuardLoggingStrategy loggingStrategyBean = context.getBean(loggingStrategy);
             boolean loggingSuccessfull = loggingStrategyBean.callLog(trace);
-            if(loggingSuccessfull)
+            if (loggingSuccessfull)
                 successfulLoggingCount++;
         }
 
@@ -47,7 +47,7 @@ public class UncaughtGuardRestControllerAdvice {
         logger.fine("Checking if exception of type " + e.getClass().getSimpleName() + " is excluded from handling");
         boolean isExcluded = Arrays.stream(properties.getExcludedExceptions()).anyMatch(excluded -> excluded.equals(e.getClass()));
 
-        if(isExcluded)
+        if (isExcluded)
             logger.fine("Exception of type " + e.getClass().getSimpleName() + " is specified to be excluded from handling, it will be thrown again");
 
         return isExcluded;

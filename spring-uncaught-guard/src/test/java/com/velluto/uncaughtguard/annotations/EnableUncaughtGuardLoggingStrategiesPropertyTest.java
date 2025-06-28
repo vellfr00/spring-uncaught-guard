@@ -19,12 +19,6 @@ public class EnableUncaughtGuardLoggingStrategiesPropertyTest {
     @SpringBootTest
     @ContextConfiguration(classes = EnableUncaughtGuardSpecifiedLoggingStrategiesTest.SpecifiedLoggingStrategiesTestConfiguration.class)
     class EnableUncaughtGuardSpecifiedLoggingStrategiesTest {
-        @EnableUncaughtGuard(loggingStrategies = {UncaughtGuardSystemErrorLoggingStrategy.class})
-        static class SpecifiedLoggingStrategiesTestConfiguration {
-            // This class is used to test the EnableUncaughtGuard annotation with custom logging strategies
-            // It can be empty as the annotation itself is being tested
-        }
-
         @Autowired
         private ApplicationContext applicationContext;
 
@@ -40,18 +34,18 @@ public class EnableUncaughtGuardLoggingStrategiesPropertyTest {
             assertEquals(1, properties.getLoggingStrategies().length);
             assertTrue(Arrays.asList(properties.getLoggingStrategies()).contains(UncaughtGuardSystemErrorLoggingStrategy.class));
         }
+
+        @EnableUncaughtGuard(loggingStrategies = {UncaughtGuardSystemErrorLoggingStrategy.class})
+        static class SpecifiedLoggingStrategiesTestConfiguration {
+            // This class is used to test the EnableUncaughtGuard annotation with custom logging strategies
+            // It can be empty as the annotation itself is being tested
+        }
     }
 
     @Nested
     @SpringBootTest
     @ContextConfiguration(classes = EnableUncaughtGuardNoLoggingStrategiesTest.NoLoggingStrategiesTestConfiguration.class)
     class EnableUncaughtGuardNoLoggingStrategiesTest {
-        @EnableUncaughtGuard(loggingStrategies = {})
-        static class NoLoggingStrategiesTestConfiguration {
-            // This class is used to test the EnableUncaughtGuard annotation without specifying logging strategies
-            // It can be empty as the annotation itself is being tested
-        }
-
         @Autowired
         private ApplicationContext applicationContext;
 
@@ -66,6 +60,12 @@ public class EnableUncaughtGuardLoggingStrategiesPropertyTest {
             assertNotNull(properties.getLoggingStrategies());
             assertEquals(1, properties.getLoggingStrategies().length);
             assertEquals(UncaughtGuardSystemErrorLoggingStrategy.class, properties.getLoggingStrategies()[0]);
+        }
+
+        @EnableUncaughtGuard(loggingStrategies = {})
+        static class NoLoggingStrategiesTestConfiguration {
+            // This class is used to test the EnableUncaughtGuard annotation without specifying logging strategies
+            // It can be empty as the annotation itself is being tested
         }
     }
 }

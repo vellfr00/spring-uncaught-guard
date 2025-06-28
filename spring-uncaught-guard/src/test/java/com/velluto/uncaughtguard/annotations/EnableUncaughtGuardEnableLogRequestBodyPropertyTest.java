@@ -17,9 +17,6 @@ public class EnableUncaughtGuardEnableLogRequestBodyPropertyTest {
     @SpringBootTest
     @ContextConfiguration(classes = EnableUncaughtGuardEnableLogRequestBodyTest.EnableLogRequestBodyTestConfiguration.class)
     class EnableUncaughtGuardEnableLogRequestBodyTest {
-        @EnableUncaughtGuard(enableLogRequestBody = false)
-        static class EnableLogRequestBodyTestConfiguration {}
-
         @Autowired
         private ApplicationContext applicationContext;
 
@@ -33,15 +30,16 @@ public class EnableUncaughtGuardEnableLogRequestBodyPropertyTest {
                 applicationContext.getBean(UncaughtGuardContentRequestCachingFilter.class);
             });
         }
+
+        @EnableUncaughtGuard(enableLogRequestBody = false)
+        static class EnableLogRequestBodyTestConfiguration {
+        }
     }
 
     @Nested
     @SpringBootTest
     @ContextConfiguration(classes = EnableUncaughtGuardEnableLogRequestBodyTrueTest.EnableLogRequestBodyTrueTestConfiguration.class)
     class EnableUncaughtGuardEnableLogRequestBodyTrueTest {
-        @EnableUncaughtGuard(enableLogRequestBody = true)
-        static class EnableLogRequestBodyTrueTestConfiguration {}
-
         @Autowired
         private ApplicationContext applicationContext;
 
@@ -52,6 +50,10 @@ public class EnableUncaughtGuardEnableLogRequestBodyPropertyTest {
 
             // Check that the filter is registered
             assertNotNull(applicationContext.getBean(UncaughtGuardContentRequestCachingFilter.class));
+        }
+
+        @EnableUncaughtGuard(enableLogRequestBody = true)
+        static class EnableLogRequestBodyTrueTestConfiguration {
         }
     }
 }

@@ -3,12 +3,11 @@ package com.velluto.uncaughtguard.models;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class UncaughtGuardExceptionTrace {
@@ -67,11 +66,12 @@ public class UncaughtGuardExceptionTrace {
         byte[] cached = wrappedRequest.getContentAsByteArray();
 
         // body can be never read yet or actually empty
-        if(cached.length == 0) {
+        if (cached.length == 0) {
             try {
                 wrappedRequest.getInputStream().readAllBytes();
             } catch (IOException e) {
-                logger.log(Level.WARNING, "Error reading body from the request that did throw unhandled exception with assigned traceId: " + traceId, e);            }
+                logger.log(Level.WARNING, "Error reading body from the request that did throw unhandled exception with assigned traceId: " + traceId, e);
+            }
         }
 
         // at this point we are sure the body was read, if this returns nothing then the body is actually empty
@@ -79,7 +79,7 @@ public class UncaughtGuardExceptionTrace {
     }
 
     private String getBodyFromRequest(HttpServletRequest request, boolean isEnableLogRequestBody) {
-        if(!isEnableLogRequestBody || !(request instanceof ContentCachingRequestWrapper wrappedRequest))
+        if (!isEnableLogRequestBody || !(request instanceof ContentCachingRequestWrapper wrappedRequest))
             return "";
 
         return readRequestBody(wrappedRequest);

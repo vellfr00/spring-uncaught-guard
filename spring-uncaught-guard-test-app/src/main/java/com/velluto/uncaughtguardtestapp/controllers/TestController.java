@@ -18,8 +18,7 @@ public class TestController {
     public TestResponseDTO postTestData(
             @PathVariable Integer testId,
             @RequestParam(required = false) boolean throwKnown,
-            @RequestBody TestRequestDTO body)
-    {
+            @RequestBody TestRequestDTO body) {
         return testService.handlePostTest(testId, throwKnown, body);
     }
 }

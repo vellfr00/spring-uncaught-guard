@@ -5,7 +5,6 @@ import com.velluto.uncaughtguard.filters.UncaughtGuardContentRequestCachingFilte
 import com.velluto.uncaughtguard.properties.UncaughtGuardProperties;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardLoggingStrategy;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardSystemErrorLoggingStrategy;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -13,6 +12,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 
 import java.util.Arrays;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
@@ -37,7 +37,7 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
 
         registerPropertiesBean(registry, strategies, excludedExceptions, httpResponseErrorMessage, logErrorMessage, keepThrowingExceptions, enableLogRequestBody);
         registerLoggingStrategiesBeans(registry, strategies);
-        registerRequestCachingFilter(registry ,enableLogRequestBody);
+        registerRequestCachingFilter(registry, enableLogRequestBody);
     }
 
     private Class<? extends UncaughtGuardLoggingStrategy>[] getLoggingStrategies(AnnotationAttributes attrs) {
@@ -69,13 +69,13 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
 
         logger.fine(String.format(
                 "Successfully registered UncaughtGuard properties.\n" +
-                "Registered properties:\n\n" +
-                "loggingStrategies        : %s\n" +
-                "excludedExceptions       : %s\n" +
-                "httpResponseErrorMessage : %s\n" +
-                "logErrorMessage          : %s\n" +
-                "keepThrowingExceptions   : %s\n" +
-                "enableLogRequestBody     : %s\n",
+                        "Registered properties:\n\n" +
+                        "loggingStrategies        : %s\n" +
+                        "excludedExceptions       : %s\n" +
+                        "httpResponseErrorMessage : %s\n" +
+                        "logErrorMessage          : %s\n" +
+                        "keepThrowingExceptions   : %s\n" +
+                        "enableLogRequestBody     : %s\n",
                 Arrays.stream(strategies).map(Class::getSimpleName).collect(Collectors.joining(",")),
                 Arrays.stream(excludedExceptions).map(Class::getSimpleName).collect(Collectors.joining(",")),
                 httpResponseErrorMessage,
@@ -89,7 +89,7 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
         if (!strategyClass.isAnnotationPresent(org.springframework.stereotype.Component.class)) {
             throw new IllegalArgumentException(
                     "The specified logging strategy class " + strategyClass.getName() +
-                    " must be annotated with @Component to be registered as a bean."
+                            " must be annotated with @Component to be registered as a bean."
             );
         }
     }

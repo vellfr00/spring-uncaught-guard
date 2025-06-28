@@ -17,7 +17,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({ UncaughtGuardRegistrar.class, UncaughtGuardRestControllerAdvice.class })
+@Import({UncaughtGuardRegistrar.class, UncaughtGuardRestControllerAdvice.class})
 public @interface EnableUncaughtGuard {
 
     /**
@@ -26,7 +26,7 @@ public @interface EnableUncaughtGuard {
      *
      * @return array of logging strategy classes
      */
-    Class<? extends UncaughtGuardLoggingStrategy>[] loggingStrategies() default { UncaughtGuardSystemErrorLoggingStrategy.class };
+    Class<? extends UncaughtGuardLoggingStrategy>[] loggingStrategies() default {UncaughtGuardSystemErrorLoggingStrategy.class};
 
     /**
      * List of exception types to be excluded from UncaughtGuard handling.

@@ -7,14 +7,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ContextConfiguration(classes = EnableUncaughtGuardKeepThrowingExceptionsPropertyTest.KeepThrowingExceptionsTestConfiguration.class)
 @EnableUncaughtGuard(keepThrowingExceptions = true)
 public class EnableUncaughtGuardKeepThrowingExceptionsPropertyTest {
-    static class KeepThrowingExceptionsTestConfiguration {}
-
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -22,5 +20,8 @@ public class EnableUncaughtGuardKeepThrowingExceptionsPropertyTest {
     void testKeepThrowingExceptionsProperty() {
         UncaughtGuardProperties properties = applicationContext.getBean(UncaughtGuardProperties.class);
         assertTrue(properties.isKeepThrowingExceptions());
+    }
+
+    static class KeepThrowingExceptionsTestConfiguration {
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Service
 public class TestService {
     private void canThrow(boolean throwKnown) throws TestKnownException {
-        if(throwKnown)
+        if (throwKnown)
             throw new TestKnownException("Query param set to throw known exception");
     }
 
@@ -19,8 +19,7 @@ public class TestService {
             @PathVariable Integer testId,
             @RequestParam boolean throwKnown,
             @RequestBody TestRequestDTO body)
-            throws TestKnownException
-    {
+            throws TestKnownException {
         canThrow(throwKnown);
 
         TestResponseDTO responseDTO = new TestResponseDTO();

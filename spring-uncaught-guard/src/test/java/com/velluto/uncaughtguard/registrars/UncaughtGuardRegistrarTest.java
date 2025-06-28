@@ -18,7 +18,8 @@ import java.lang.reflect.Method;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 class UncaughtGuardRegistrarTest {
     @Mock
@@ -128,19 +129,11 @@ class UncaughtGuardRegistrarTest {
         Method method = UncaughtGuardRegistrar.class.getDeclaredMethod("checkLoggingStrategyClassIsComponentAnnotated", Class.class);
         method.setAccessible(true);
         InvocationTargetException ex = assertThrows(InvocationTargetException.class, () ->
-            method.invoke(registrar, NotAComponent.class)
+                method.invoke(registrar, NotAComponent.class)
         );
         Throwable cause = ex.getCause();
         assertInstanceOf(IllegalArgumentException.class, cause);
         assertTrue(cause.getMessage().contains("must be annotated with @Component"));
-    }
-
-    @Component
-    static class AnnotatedStrategy extends UncaughtGuardLoggingStrategy {
-        @Override
-        public void log(UncaughtGuardExceptionTrace exceptionTrace) {
-            // Left empty intentionally, for testing purposes it is not needed
-        }
     }
 
     @Test
@@ -166,5 +159,13 @@ class UncaughtGuardRegistrarTest {
         Throwable cause = ex.getCause();
         assertTrue(cause instanceof IllegalArgumentException);
         assertTrue(cause.getMessage().contains("must be annotated with @Component"));
+    }
+
+    @Component
+    static class AnnotatedStrategy extends UncaughtGuardLoggingStrategy {
+        @Override
+        public void log(UncaughtGuardExceptionTrace exceptionTrace) {
+            // Left empty intentionally, for testing purposes it is not needed
+        }
     }
 }

@@ -36,7 +36,7 @@ public class UncaughtGuardRestControllerAdviceTest {
         when(request.getHeader("Content-Type")).thenReturn("application/json");
 
         loggingStrategy = mock(UncaughtGuardSystemErrorLoggingStrategy.class);
-        when(properties.getLoggingStrategies()).thenReturn(new Class[]{ UncaughtGuardSystemErrorLoggingStrategy.class });
+        when(properties.getLoggingStrategies()).thenReturn(new Class[]{UncaughtGuardSystemErrorLoggingStrategy.class});
         when(context.getBean(UncaughtGuardSystemErrorLoggingStrategy.class)).thenReturn((UncaughtGuardSystemErrorLoggingStrategy) loggingStrategy);
 
         advice = new UncaughtGuardRestControllerAdvice(context, properties);

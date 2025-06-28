@@ -7,15 +7,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ContextConfiguration(classes = EnableUncaughtGuardExcludedExceptionsPropertyTest.ExcludedExceptionsTestConfiguration.class)
 @EnableUncaughtGuard(excludedExceptions = {IllegalArgumentException.class, NullPointerException.class})
 public class EnableUncaughtGuardExcludedExceptionsPropertyTest {
-    static class ExcludedExceptionsTestConfiguration {}
-
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -26,5 +25,8 @@ public class EnableUncaughtGuardExcludedExceptionsPropertyTest {
         assertEquals(2, properties.getExcludedExceptions().length);
         assertTrue(Arrays.asList(properties.getExcludedExceptions()).contains(IllegalArgumentException.class));
         assertTrue(Arrays.asList(properties.getExcludedExceptions()).contains(NullPointerException.class));
+    }
+
+    static class ExcludedExceptionsTestConfiguration {
     }
 }
