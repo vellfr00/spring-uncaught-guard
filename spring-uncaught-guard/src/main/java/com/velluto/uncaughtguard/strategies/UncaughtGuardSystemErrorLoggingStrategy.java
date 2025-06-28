@@ -6,6 +6,11 @@ import org.springframework.stereotype.Component;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+/**
+ * A logging strategy for uncaught exceptions that logs the details to the standard error output.
+ * It is the default logging strategy used by the Uncaught Guard framework.
+ * If many logging strategies are defined, and they all fail to log, this one will be used as a fallback.
+ */
 @Component
 public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggingStrategy {
     private String getLoggableExceptionStackTraceString(RuntimeException exception) {

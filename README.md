@@ -19,8 +19,9 @@ If you have defined a custom `@RestControllerAdvice` for a specific exception ty
 When an uncaught exception occurs, the library automatically captures comprehensive details—including the stack trace, request headers, cookies, and body content—and assigns a unique trace identifier (`traceId`) to the event. These details are then logged using your chosen logging strategies, and a standardized error response containing the `traceId` is returned to the client, making debugging and error tracking straightforward.
 
 ## 🗂️ Project Structure
-- 📦 `uncaught-guard`: Contains the core library code.
-- 🧪 `uncaught-guard-test-app`: A sample Spring Boot application that demonstrates the library in action and serves as a testing ground.
+- 📦 `spring-uncaught-guard`: Contains the core library code.
+- 📦 `spring-uncaught-guard-slf4j-strategy`: Contains the SLF4J logging strategy implementation, which requires SLF4J as a dependency.
+- 🧪 `spring-uncaught-guard-test-app`: A sample Spring Boot application that demonstrates the library in action and serves as a testing ground.
 
 ## 🛠️ Usage
 
@@ -72,11 +73,13 @@ public class MySpringBootApplication {
 
 ## 🪵 Logging Strategies
 
-You can use provided logging strategies or create your own custom logging strategy by extending the abstract `UncaughtGuardLoggingStrategy` class
-and implementing the abstract `log` method. This method receives an `UncaughtGuardException` object, which contains all the necessary details about the uncaught exception, including the stack trace, request data, and the unique trace identifier.
+You can use provided logging strategies or create your own custom logging strategy by extending the abstract `UncaughtGuardLoggingStrategy` class, implementing the abstract `log` method and annotate the your new implementation class as `@Component`.
+The log method receives an `UncaughtGuardException` object, which contains all the necessary details about the uncaught exception, including the stack trace, request data, and the unique trace identifier.
 
 ### 🏗️ Built-in Logging Strategies
 
 Here are listed the provided logging strategies:
 
-- 🖥️ **UncaughtGuardSystemErrLoggingStrategy**: Logs uncaught exceptions to `System.err`.
+- 📦 **UncaughtGuardSystemErrLoggingStrategy**: Logs uncaught exceptions to `System.err`, this is the default logging strategy and used as a fallback if no other logging strategy is provided and if they all fail.
+- 📦 **UncaughtGuardJavaLoggerLoggingStrategy**: Logs uncaught exceptions using Java's built-in `java.util.logging.Logger`.
+- 📦 **UncaughtGuardSlf4jLoggingStrategy**: Logs uncaught exceptions using SLF4J, provided in `spring-uncaught-guard-slf4j-strategy` and requires SLF4J as a dependency.

@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * A logging strategy for uncaught exceptions that uses the java.util.logging framework.
+ * This strategy logs the exception details using the Logger associated with the class and method that threw the exception.
+ */
 @Component
 public class UncaughtGuardJavaLoggerLoggingStrategy extends UncaughtGuardLoggingStrategy {
     @Override

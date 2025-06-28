@@ -6,11 +6,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.logging.Logger;
 
+/**
+ * Abstract class for logging strategies in the Uncaught Guard framework.
+ * This class provides a template for logging uncaught exceptions with a specific strategy.
+ * It includes methods to retrieve the error message, throwing class name and method name.
+ * Developers can extend this class to implement their own logging strategies and use them in the UncaughtGuard framework.
+ * All implementations must provide a concrete implementation of the `log` method and use the `@Component` annotation to register the strategy as a Spring bean.
+ * <p>
+ * The class also handles exceptions that may occur during the logging process, ensuring that the application does not crash.
+ * <p>
+ * It is configured through the `UncaughtGuardProperties` class, which allows customization of the logging behavior,
+ * including the error message to be logged when an uncaught exception occurs.
+ */
 public abstract class UncaughtGuardLoggingStrategy {
     private final Logger logger = Logger.getLogger(UncaughtGuardLoggingStrategy.class.getName());
 
     @Autowired
-    protected UncaughtGuardProperties properties;
+    private UncaughtGuardProperties properties;
 
     /**
      * Returns the error message to be logged when an uncaught exception occurs and before all the details of the exception trace.
