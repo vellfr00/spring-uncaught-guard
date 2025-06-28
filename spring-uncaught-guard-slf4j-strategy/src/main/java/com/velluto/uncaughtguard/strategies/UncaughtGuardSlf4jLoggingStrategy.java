@@ -1,9 +1,11 @@
 package com.velluto.uncaughtguard.strategies;
 
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
+import org.springframework.stereotype.Component;
 
 import java.util.logging.Logger;
 
+@Component
 public class UncaughtGuardSlf4jLoggingStrategy extends UncaughtGuardLoggingStrategy {
     private static final Logger logger = Logger.getLogger(UncaughtGuardSlf4jLoggingStrategy.class.getName());
 
