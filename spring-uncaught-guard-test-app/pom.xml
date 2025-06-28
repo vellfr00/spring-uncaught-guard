@@ -57,13 +57,16 @@
             <groupId>com.velluto</groupId>
             <artifactId>spring-uncaught-guard-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.velluto</groupId>
             <artifactId>spring-uncaught-guard-slf4j-strategy</artifactId>
             <version>1.0.0-SNAPSHOT</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.velluto</groupId>
+            <artifactId>spring-uncaught-guard-kafka-strategy</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
