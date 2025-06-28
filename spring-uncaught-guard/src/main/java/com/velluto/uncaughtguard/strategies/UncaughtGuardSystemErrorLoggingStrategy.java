@@ -9,12 +9,6 @@ import java.io.StringWriter;
 
 @Component
 public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggingStrategy {
-    private final UncaughtGuardProperties properties;
-
-    public UncaughtGuardSystemErrorLoggingStrategy(UncaughtGuardProperties properties) {
-        this.properties = properties;
-    }
-
     private String getLoggableExceptionStackTraceString(RuntimeException exception) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);

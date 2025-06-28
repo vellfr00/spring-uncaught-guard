@@ -1,10 +1,16 @@
 package com.velluto.uncaughtguard.strategies;
 
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
+import com.velluto.uncaughtguard.properties.UncaughtGuardProperties;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.logging.Logger;
 
 public abstract class UncaughtGuardLoggingStrategy {
-    Logger logger = Logger.getLogger(UncaughtGuardLoggingStrategy.class.getName());
+    private final Logger logger = Logger.getLogger(UncaughtGuardLoggingStrategy.class.getName());
+
+    @Autowired
+    protected UncaughtGuardProperties properties;
 
     /**
      * Calls the logging strategy to log the uncaught exception trace.

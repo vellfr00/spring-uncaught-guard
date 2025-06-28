@@ -1,17 +1,11 @@
 package com.velluto.uncaughtguard.strategies;
 
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
-import com.velluto.uncaughtguard.properties.UncaughtGuardProperties;
 
 import java.util.logging.Logger;
 
 public class UncaughtGuardSlf4jLoggingStrategy extends UncaughtGuardLoggingStrategy {
     private static final Logger logger = Logger.getLogger(UncaughtGuardSlf4jLoggingStrategy.class.getName());
-    private final UncaughtGuardProperties properties;
-
-    public UncaughtGuardSlf4jLoggingStrategy(UncaughtGuardProperties properties) {
-        this.properties = properties;
-    }
 
     public String getLogErrorMessage() {
         return properties.getLogErrorMessage();
