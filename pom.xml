@@ -1,0 +1,17 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.velluto</groupId>
+    <artifactId>spring-uncaught-guard</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>spring-uncaught-guard-core</module>
+        <module>spring-uncaught-guard-slf4j-strategy</module>
+        <module>spring-uncaught-guard-test-app</module>
+    </modules>
+    <name>Spring Uncaught Guard</name>
+    <description>The guardian for uncaught exceptions in your Spring REST services</description>
+</project>
+

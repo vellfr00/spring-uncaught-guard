@@ -38,7 +38,7 @@ returned to the client, making debugging and error tracking straightforward.
 
 ## 🗂️ Project Structure
 
-- 📦 `spring-uncaught-guard`: Contains the core library code.
+- 📦 `spring-uncaught-guard-core`: Contains the core library code.
 - 📦 `spring-uncaught-guard-slf4j-strategy`: Contains the SLF4J logging strategy implementation, which requires SLF4J as
   a dependency.
 - 🧪 `spring-uncaught-guard-test-app`: A sample Spring Boot application that demonstrates the library in action and
