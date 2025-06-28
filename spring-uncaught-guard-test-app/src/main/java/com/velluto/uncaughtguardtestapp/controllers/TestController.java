@@ -16,8 +16,8 @@ public class TestController {
 
     @PostMapping("/{testId}")
     public TestResponseDTO postTestData(
-            @PathVariable Integer testId,
-            @RequestParam(required = false) boolean throwKnown,
+            @PathVariable(name = "testId") Integer testId,
+            @RequestParam(name = "throwKnown", required = false) boolean throwKnown,
             @RequestBody TestRequestDTO body) {
         return testService.handlePostTest(testId, throwKnown, body);
     }
