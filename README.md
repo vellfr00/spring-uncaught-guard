@@ -43,10 +43,12 @@ manual exception management.
 Spring Uncaught Guard utilizes Spring's `@RestControllerAdvice` mechanism to seamlessly intercept uncaught exceptions
 thrown by your REST controllers. By default, it is configured to handle all exceptions that are subclasses of
 `RuntimeException`, which are commonly used for application-specific errors.
+
 If you have defined a custom `@RestControllerAdvice` for a specific exception type, your custom handler will take
 precedence, and those exceptions will not be intercepted by this library. This ensures you retain full control and
 flexibility over exception handling for known cases, while Spring Uncaught Guard acts as a safety net for truly
 unexpected errors.
+
 When an uncaught exception occurs, the library automatically captures comprehensive details—including the stack trace,
 request headers, cookies, and body content—and assigns a unique trace identifier (`traceId`) to the event. These details
 are then logged using your chosen logging strategies, and a standardized error response containing the `traceId` is
@@ -60,8 +62,6 @@ returned to the client, making debugging and error tracking straightforward.
   a dependency.
 - 📦 `spring-uncaught-guard-kafka-strategy`: Contains the Kafka logging strategy implementation, which
   requires Kafka as a dependency.
-- 📦 `spring-uncaught-guard-java-logger-strategy`: Contains the Java Logger logging strategy implementation, which
-  uses Java's built-in `java.util.logging.Logger`.
 - 🧪 `spring-uncaught-guard-test-app`: A sample Spring Boot application that demonstrates the library in action and
   serves as a testing ground.
 
