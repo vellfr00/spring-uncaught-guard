@@ -8,14 +8,21 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
-@Component
+/**
+ * This abstract class provides a base implementation for logging uncaught exceptions to a Kafka topic.
+ * Developers must extend this class and implement the methods to provide the Kafka bootstrap servers
+ * and topic name.
+ * It initializes the Kafka producer template and handles the logging of uncaught exceptions.
+ */
 public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends UncaughtGuardLoggingStrategy {
+    private static final Logger logger = Logger.getLogger(UncaughtGuardKafkaAbstractLoggingStrategy.class.getName());
+
     private List<String> kafkaBootstrapServers;
     private String kafkaTopicName;
     private KafkaTemplate<String, UncaughtGuardExceptionTrace> kafkaProducerTemplate;
@@ -37,7 +44,7 @@ public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends Uncaught
     public abstract String kafkaTopicName();
 
     /**
-     * This method is called after the bean is constructed and all dependencies are injected.
+     * This method is called after the bean is constructed and instantiated.
      * It is used to initialize the Kafka logging strategy by loading and validating the configuration,
      * and building the producer factory.
      * It ensures that the necessary Kafka configurations are set up before any logging occurs.
@@ -45,9 +52,13 @@ public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends Uncaught
      * @throws IllegalArgumentException if the Kafka bootstrap servers or topic name are not provided
      */
     @PostConstruct
-    private void init() {
+    public final void init() {
+        logger.fine("Initializing Kafka logging strategy for UncaughtGuard.");
+
         loadAndValidateConfiguration();
         buildKafkaProducerTemplate();
+
+        logger.fine("Kafka logging strategy initialized successfully with bootstrap servers: " + kafkaBootstrapServers + " and topic name: " + kafkaTopicName);
     }
 
     /**
@@ -94,6 +105,6 @@ public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends Uncaught
 
     @Override
     protected final void log(UncaughtGuardExceptionTrace exceptionTrace) {
-        this.kafkaProducerTemplate.send(this.kafkaTopicName, exceptionTrace);
+        this.kafkaProducerTemplate.send(this.kafkaTopicName, exceptionTrace).join();
     }
 }
