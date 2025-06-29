@@ -133,7 +133,7 @@ public class MySpringBootApplication {
 You can use provided logging strategies or create your own custom logging strategy by extending the abstract
 `UncaughtGuardLoggingStrategy` class and implementing the abstract `log` method.
 
-The log method receives an `UncaughtGuardException` object, which contains all the necessary details about the uncaught
+The log method receives an `UncaughtGuardExceptionTrace` object, which contains all the necessary details about the uncaught
 exception, including the stack trace, request data, and the unique trace identifier.
 
 ## 🏗️ Built-in Logging Strategies
@@ -275,12 +275,12 @@ import com.velluto.springuncaughtguard.kafka.UncaughtGuardKafkaAbstractLoggingSt
 public class MyUncaughtGuardKafkaLoggingStrategy extends UncaughtGuardKafkaAbstractLoggingStrategy {
 
     @Override
-    protected List<String> getKafkaBootstrapServers() {
+    protected List<String> kafkaBootstrapServers() {
         return List.of("localhost:9092", "otherhost:9092"); // Replace with your Kafka bootstrap servers addresses
     }
 
     @Override
-    protected String getKafkaTopicName() {
+    protected String kafkaTopicName() {
         return "uncaught-exceptions-topic"; // Replace with your Kafka topic name
     }
 }

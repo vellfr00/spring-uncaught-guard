@@ -10,6 +10,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents an uncaught exception trace in the Uncaught Guard framework.
+ * It captures details about the HTTP request that caused the exception,
+ * including the request method, path, query parameters, headers, and body.
+ * It also includes the exception itself and a unique trace ID for tracking purposes.
+ * <p>
+ * From an exception trace it is possible to retrieve the HTTP response DTO
+ * which contains the incident timestamp, trace ID, and an error message.
+ * This DTO is the HTTP response that will be sent back to the client.
+ */
 public class UncaughtGuardExceptionTrace {
     private static final Logger logger = Logger.getLogger(UncaughtGuardExceptionTrace.class.getName());
 
