@@ -21,6 +21,7 @@ import java.util.logging.Logger;
  * This abstract class provides a base implementation for logging uncaught exceptions to a Kafka topic.
  * Developers must extend this class and implement the methods to provide the Kafka bootstrap servers
  * and topic name.
+ * It is possible to specify null or empty values for the bootstrap servers only, in order to load them from the environment variable `spring.kafka.bootstrap-servers`.
  * It initializes the Kafka producer template and handles the logging of uncaught exceptions.
  */
 public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends UncaughtGuardLoggingStrategy {
