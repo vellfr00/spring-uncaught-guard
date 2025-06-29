@@ -286,6 +286,29 @@ public class MyUncaughtGuardKafkaLoggingStrategy extends UncaughtGuardKafkaAbstr
 }
 ```
 
+If you wish to use the bootstrap servers defined in the `spring.kafka.bootstrap-servers` property in your `application.properties` or `application.yml` file, you can override the `getKafkaBootstrapServers()` method to return null or an empty list, and the library will automatically use the property value.
+
+```properties
+spring.kafka.bootstrap-servers=localhost:9092,otherhost:9092
+```
+
+```java
+import com.velluto.springuncaughtguard.kafka.UncaughtGuardKafkaAbstractLoggingStrategy;
+
+public class MyUncaughtGuardKafkaLoggingStrategy extends UncaughtGuardKafkaAbstractLoggingStrategy {
+
+    @Override
+    protected List<String> kafkaBootstrapServers() {
+        return null; // Use the bootstrap servers defined in application.properties or application.yml
+    }
+
+    @Override
+    protected String kafkaTopicName() {
+        return "uncaught-exceptions-topic"; // Replace with your Kafka topic name
+    }
+}
+```
+
 Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot application class and specify the name of Kafka logging strategy implementation class in the `loggingStrategies` attribute:
 
 ```java

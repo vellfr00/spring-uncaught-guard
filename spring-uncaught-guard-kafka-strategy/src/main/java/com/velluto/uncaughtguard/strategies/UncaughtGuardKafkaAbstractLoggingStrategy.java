@@ -4,6 +4,8 @@ import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 import jakarta.annotation.PostConstruct;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.UUIDSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
@@ -24,7 +26,10 @@ import java.util.logging.Logger;
 public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends UncaughtGuardLoggingStrategy {
     private static final Logger logger = Logger.getLogger(UncaughtGuardKafkaAbstractLoggingStrategy.class.getName());
 
-    private List<String> kafkaBootstrapServers;
+    @Autowired
+    private Environment environment;
+
+    private String kafkaBootstrapServers;
     private String kafkaTopicName;
     private KafkaTemplate<UUID, UncaughtGuardExceptionTrace> kafkaProducerTemplate;
 
@@ -54,31 +59,60 @@ public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends Uncaught
      */
     @PostConstruct
     public final void init() {
-        logger.fine("Initializing Kafka logging strategy for UncaughtGuard.");
+        logger.fine("Initializing Kafka logging strategy for Uncaught Guard.");
 
-        loadAndValidateConfiguration();
+        loadAndValidateKafkaBootstrapServers();
+        loadAndValidateKafkaTopicName();
         buildKafkaProducerTemplate();
 
-        logger.fine("Kafka logging strategy initialized successfully with bootstrap servers: " + kafkaBootstrapServers + " and topic name: " + kafkaTopicName);
+        logger.fine("Successfully initialized Kafka logging strategy for Uncaught Guard with bootstrap servers: " + kafkaBootstrapServers + " and topic name: " + kafkaTopicName);
     }
 
     /**
-     * This method is called to load and validate the configuration for Kafka logging.
-     * It retrieves the Kafka bootstrap servers and topic name from the abstract methods
+     * This method loads and validates the Kafka bootstrap servers and topic name.
+     * It retrieves the bootstrap servers from the abstract method
      * and checks if they are not null or empty.
-     * If any of the required configurations are missing,
+     * If the bootstrap servers are not provided in the method, meaning it returns null or empty,
+     * it attempts to load them from the environment variable `spring.kafka.bootstrap-servers`.
+     * If the bootstrap servers are still not found,
      * an IllegalArgumentException is thrown.
      *
-     * @throws IllegalArgumentException if the Kafka bootstrap servers or topic name are not provided
+     * @throws IllegalArgumentException if the Kafka bootstrap servers are not provided both from the method and environment variable
      */
-    private void loadAndValidateConfiguration() {
-        this.kafkaBootstrapServers = kafkaBootstrapServers();
-        if (kafkaBootstrapServers == null || kafkaBootstrapServers.isEmpty())
-            throw new IllegalArgumentException("Kafka bootstrap servers must be provided, please implement the kafkaBootstrapServers() method correctly.");
+    private void loadAndValidateKafkaBootstrapServers() {
+        List<String> bootstrapServersFromMethod = kafkaBootstrapServers();
+        if (bootstrapServersFromMethod != null && !bootstrapServersFromMethod.isEmpty()) {
+            this.kafkaBootstrapServers = String.join(",", bootstrapServersFromMethod);
+            logger.fine("Retrieved Kafka bootstrap servers from method kafkaBootstrapServers: " + this.kafkaBootstrapServers);
+            return;
+        }
 
-        this.kafkaTopicName = kafkaTopicName();
-        if (kafkaTopicName == null || kafkaTopicName.isEmpty())
-            throw new IllegalArgumentException("Kafka topic name must be provided, please implement the kafkaTopicName() method correctly.");
+        logger.fine("Null or empty Kafka bootstrap servers provided from method kafkaBootstrapServers, trying to load from environment variable spring.kafka.bootstrap-servers");
+        String bootstrapServersFromEnv = environment.getProperty("spring.kafka.bootstrap-servers");
+        if (bootstrapServersFromEnv != null && !bootstrapServersFromEnv.isEmpty()) {
+            this.kafkaBootstrapServers = bootstrapServersFromEnv;
+            logger.fine("Retrieved Kafka bootstrap servers from environment variable spring.kafka.bootstrap-servers: " + this.kafkaBootstrapServers);
+        } else {
+            throw new IllegalArgumentException("Kafka bootstrap servers must be provided, please implement the kafkaBootstrapServers method or set the environment variable spring.kafka.bootstrap-servers.");
+        }
+    }
+
+    /**
+     * This method is called to load and validate the Kafka topic name.
+     * It retrieves the topic name from the abstract method
+     * and checks if it is not null or empty.
+     * If the topic name is not provided,
+     * an IllegalArgumentException is thrown.
+     *
+     * @throws IllegalArgumentException if the Kafka topic name is not provided
+     */
+    private void loadAndValidateKafkaTopicName() {
+        String topicName = kafkaTopicName();
+        if (topicName == null || topicName.isEmpty())
+            throw new IllegalArgumentException("Kafka topic name must be provided, please implement the kafkaTopicName method correctly.");
+
+        logger.fine("Retrieved Kafka topic name from method kafkaTopicName: " + topicName);
+        this.kafkaTopicName = topicName;
     }
 
     /**
@@ -92,7 +126,7 @@ public abstract class UncaughtGuardKafkaAbstractLoggingStrategy extends Uncaught
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                String.join(",", kafkaBootstrapServers));
+                kafkaBootstrapServers);
         configProps.put(
                 ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
                 UUIDSerializer.class);
