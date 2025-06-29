@@ -1,9 +1,19 @@
 package com.velluto.uncaughtguard.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.velluto.uncaughtguard.serializers.UncaughtGuardExceptionTraceBodyJsonSerializer;
+import com.velluto.uncaughtguard.serializers.UncaughtGuardExceptionTraceExceptionJsonSerializer;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
@@ -23,13 +33,16 @@ import java.util.stream.Collectors;
 public class UncaughtGuardExceptionTrace {
     private static final Logger logger = Logger.getLogger(UncaughtGuardExceptionTrace.class.getName());
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private final LocalDateTime incidentTimestamp;
     private final UUID traceId;
     private final String method;
     private final String path;
     private final Map<String, String> queryParams;
     private final Map<String, String> headers;
+    @JsonSerialize(using = UncaughtGuardExceptionTraceBodyJsonSerializer.class)
     private final String body;
+    @JsonSerialize(using = UncaughtGuardExceptionTraceExceptionJsonSerializer.class)
     private final RuntimeException exception;
 
     public UncaughtGuardExceptionTrace(HttpServletRequest request, RuntimeException exception, boolean isEnableLogRequestBody) {
