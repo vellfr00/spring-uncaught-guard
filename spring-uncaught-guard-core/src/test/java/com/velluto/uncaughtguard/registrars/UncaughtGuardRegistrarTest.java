@@ -1,6 +1,5 @@
 package com.velluto.uncaughtguard.registrars;
 
-import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardLoggingStrategy;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardSystemErrorLoggingStrategy;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +9,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.annotation.AnnotationAttributes;
-import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -118,11 +116,19 @@ class UncaughtGuardRegistrarTest {
         assertNull(method.invoke(registrar, (Object) null));
     }
 
-    @Component
-    static class AnnotatedStrategy extends UncaughtGuardLoggingStrategy {
-        @Override
-        public void log(UncaughtGuardExceptionTrace exceptionTrace) {
+    @Test
+    void testRegisterLoggingStrategiesBeansThrowsIfAbstractClassSpecified() throws Exception {
+        abstract class AbstractStrategy extends UncaughtGuardLoggingStrategy {
             // Left empty intentionally, for testing purposes it is not needed
         }
+        Method method = UncaughtGuardRegistrar.class.getDeclaredMethod("registerLoggingStrategiesBeans", BeanDefinitionRegistry.class, Class[].class);
+        method.setAccessible(true);
+        Class[] strategies = new Class[]{AbstractStrategy.class};
+        InvocationTargetException exception = assertThrows(InvocationTargetException.class, () ->
+            method.invoke(registrar, registry, (Object) strategies)
+        );
+        Throwable cause = exception.getCause();
+        assertInstanceOf(IllegalArgumentException.class, cause);
+        assertTrue(cause.getMessage().contains("is abstract and cannot be instantiated"));
     }
 }
