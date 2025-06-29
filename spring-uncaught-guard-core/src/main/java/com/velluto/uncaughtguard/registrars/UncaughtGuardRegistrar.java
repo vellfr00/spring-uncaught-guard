@@ -87,6 +87,14 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
 
     private void registerLoggingStrategiesBeans(BeanDefinitionRegistry registry, Class<? extends UncaughtGuardLoggingStrategy>[] strategies) {
         for (Class<? extends UncaughtGuardLoggingStrategy> strategyClass : strategies) {
+            // if class is an abstract class, throw exception
+            if (java.lang.reflect.Modifier.isAbstract(strategyClass.getModifiers())) {
+                throw new IllegalArgumentException(
+                        "Specified logging strategy class " + strategyClass.getName() +
+                                " is abstract and cannot be instantiated. Please provide a concrete implementation."
+                );
+            }
+
             // register the logging strategy as a bean definition
             RootBeanDefinition beanDef = new RootBeanDefinition(strategyClass);
             String beanName = decapitalize(strategyClass.getSimpleName());
