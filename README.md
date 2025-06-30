@@ -16,7 +16,7 @@ The Guardian for uncaught exceptions in your Spring REST services.
     - [📦 Java Logger Logging Strategy](#-java-logger-logging-strategy)
     - [📦 SLF4J Logging Strategy](#-slf4j-logging-strategy)
     - [📦 Kafka Logging Strategy](#-kafka-logging-strategy)
-  - [🛠️ Create a Custom Logging Strategies](#-create-a-custom-logging-strategies)
+  - [🛠️ Create a Custom Logging Strategy](#-create-a-custom-logging-strategy)
 
 # 📝 Overview
 
@@ -336,7 +336,7 @@ public class MySpringBootApplication {
 }
 ```
 
-## 🛠️ Create a Custom Logging Strategies
+## 🛠️ Create a Custom Logging Strategy
 
 Spring Uncaught Guard has the goal of making the developer experience as smooth as possible, ensuring minimal configuration and implementation effort.
 Still, the framework is designed to be extensible, allowing you to create custom logging strategies tailored to your specific needs if the built-in strategies do not meet your requirements.
