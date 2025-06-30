@@ -279,7 +279,7 @@ You will then also need to add the `spring-uncaught-guard-kafka-strategy` depend
 In case of the Kafka logging strategy, the dependency will expose an abstract class `UncaughtGuardKafkaAbstractLoggingStrategy` that you will need to extend and implement.
 This is needed in order to specify the Kafka bootstrap servers and the topic name where the uncaught exceptions will be sent.
 
-Create then a class that extends `UncaughtGuardKafkaAbstractLoggingStrategy` and implement the `getKafkaBootstrapServers()` and `getKafkaTopicName()` methods:
+Create then a class that extends `UncaughtGuardKafkaAbstractLoggingStrategy` and implement the `kafkaBootstrapServers()` and `kafkaTopicName()` methods:
 the first one will return the Kafka bootstrap servers addresses list, and the second one will return the topic name where the uncaught exceptions will be sent.
 
 ```java
@@ -299,7 +299,7 @@ public class MyUncaughtGuardKafkaLoggingStrategy extends UncaughtGuardKafkaAbstr
 }
 ```
 
-If you wish to use the bootstrap servers defined in the `spring.kafka.bootstrap-servers` property in your `application.properties` or `application.yml` file, you can override the `getKafkaBootstrapServers()` method to return null or an empty list, and the library will automatically use the property value.
+If you wish to use the bootstrap servers defined in the `spring.kafka.bootstrap-servers` property in your `application.properties` or `application.yml` file, you can override the `kafkaBootstrapServers()` method to return null or an empty list, and the library will automatically use the property value.
 
 ```properties
 spring.kafka.bootstrap-servers=localhost:9092,otherhost:9092
