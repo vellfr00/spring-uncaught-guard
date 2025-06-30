@@ -5,6 +5,7 @@ The Guardian for uncaught exceptions in your Spring REST services.
 ## 📑 Table of Contents
 - [📝 Overview](#-overview)
   - [🚀 Key Features](#-key-features)
+  - [❓ Why Use Spring Uncaught Guard?](#-why-use-spring-uncaught-guard)
   - [⚙️ How It Works](#-how-it-works)
 - [🗂️ Project Structure](#-project-structure)
 - [🛠️ Usage](#-usage)
@@ -15,6 +16,7 @@ The Guardian for uncaught exceptions in your Spring REST services.
     - [📦 Java Logger Logging Strategy](#-java-logger-logging-strategy)
     - [📦 SLF4J Logging Strategy](#-slf4j-logging-strategy)
     - [📦 Kafka Logging Strategy](#-kafka-logging-strategy)
+  - [🛠️ Create a Custom Logging Strategies](#-create-a-custom-logging-strategies)
 
 # 📝 Overview
 
@@ -37,6 +39,17 @@ manual exception management.
   adapt the library’s behavior to your specific needs.
 - 🔌 **Easily Extensible**: Provides extension points for custom exception logging, other than the ones already provided,
   enabling seamless integration with your existing logging and monitoring infrastructure.
+
+## ❓ Why Use Spring Uncaught Guard?
+
+Spring is one of the most popular frameworks for building RESTful applications, thanks in large part to its core principles that prioritize developer productivity and ease of use.
+This approach allows developers to focus on implementing business requirements, while the framework handles much of the underlying complexity.
+
+Spring Uncaught Guard fully embraces this philosophy by offering a true plug-and-play solution for handling uncaught exceptions in your REST controllers.
+It eliminates boilerplate code and manual exception handling, allowing you to focus entirely on your application logic.
+At the same time, it captures all the information you need to debug and trace issues effectively—without overwhelming you with configuration or complexity, especially if you forget to correctly log an exception in your code!
+
+Its ease of use makes it a game changer, even for older existing applications: you can add the library to your project and have it running in minutes, with no need to refactor your current codebase.
 
 ## ⚙️ How It Works
 
@@ -315,6 +328,42 @@ Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot 
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {MyUncaughtGuardKafkaLoggingStrategy.class}
+)
+public class MySpringBootApplication { 
+    public static void main(String[] args) {
+                SpringApplication.run(MySpringBootApplication.class, args);
+    }
+}
+```
+
+## 🛠️ Create a Custom Logging Strategies
+
+Spring Uncaught Guard has the goal of making the developer experience as smooth as possible, ensuring minimal configuration and implementation effort.
+Still, the framework is designed to be extensible, allowing you to create custom logging strategies tailored to your specific needs if the built-in strategies do not meet your requirements.
+You can easily create a custom logging strategy by following these three steps:
+
+1. **Create a new class** that extends the abstract `UncaughtGuardLoggingStrategy` class.
+2. **Implement the `log` method** to define how the uncaught exception should be logged. The `log` method receives an `UncaughtGuardExceptionTrace` object, which contains all the necessary details about the uncaught exception, including the stack trace, request data, and the unique trace identifier.
+3. **Register your custom logging strategy** by specifying it in the `@EnableUncaughtGuard` annotation in your main Spring Boot application class.
+
+```java
+import com.velluto.springuncaughtguard.UncaughtGuardLoggingStrategy;
+
+public class MyCustomLoggingStrategy extends UncaughtGuardLoggingStrategy {
+
+    @Override
+    public void log(UncaughtGuardExceptionTrace trace) {
+        // Implement your custom logging logic here
+        System.out.println("Custom logging for exception: " + trace.getException().getMessage());
+        // You can access trace.getRequestData() to log request details, etc.
+    }
+}
+```
+
+```java
+@SpringBootApplication
+@EnableUncaughtGuard(
+        loggingStrategies = {MyCustomLoggingStrategy.class}
 )
 public class MySpringBootApplication { 
     public static void main(String[] args) {
