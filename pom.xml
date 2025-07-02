@@ -11,6 +11,7 @@
         <module>spring-uncaught-guard-slf4j-strategy</module>
         <module>spring-uncaught-guard-test-app</module>
         <module>spring-uncaught-guard-kafka-strategy</module>
+        <module>spring-uncaught-guard-rest-strategy</module>
     </modules>
     <name>Spring Uncaught Guard</name>
     <description>The guardian for uncaught exceptions in your Spring REST services</description>
