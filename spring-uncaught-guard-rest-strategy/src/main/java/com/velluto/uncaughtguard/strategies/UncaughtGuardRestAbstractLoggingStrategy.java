@@ -53,7 +53,7 @@ public abstract class UncaughtGuardRestAbstractLoggingStrategy extends UncaughtG
             throw new IllegalArgumentException("Rest endpoint must not be null or empty");
 
         this.restEndpoint = endpoint;
-        logger.info("Successfully initialized Rest Logging Strategy, POST requests will be sent to endpoint: " + restEndpoint);
+        logger.fine("Successfully initialized Rest Logging Strategy, POST requests will be sent to endpoint: " + restEndpoint);
     }
 
     @Override
