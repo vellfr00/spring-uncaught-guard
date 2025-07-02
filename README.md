@@ -15,6 +15,7 @@ The Guardian for uncaught exceptions in your Spring REST services.
     - [📦 System.err Logging Strategy](#-systemerr-logging-strategy)
     - [📦 Java Logger Logging Strategy](#-java-logger-logging-strategy)
     - [📦 SLF4J Logging Strategy](#-slf4j-logging-strategy)
+    - [📦 REST Logging Strategy](#-rest-logging-strategy)
     - [📦 Kafka Logging Strategy](#-kafka-logging-strategy)
   - [🛠️ Create a Custom Logging Strategy](#-create-a-custom-logging-strategy)
 
@@ -73,6 +74,8 @@ returned to the client, making debugging and error tracking straightforward.
   logging strategy and the `Java Logger` logging strategy, which are basic implementations and do not require any other dependencies.
 - 📦 `spring-uncaught-guard-slf4j-strategy`: Contains the SLF4J logging strategy implementation, which requires SLF4J as
   a dependency.
+- 📦 `spring-uncaught-guard-rest-strategy`: Contains the REST logging strategy implementation, which requires the
+  `spring-web` dependency.
 - 📦 `spring-uncaught-guard-kafka-strategy`: Contains the Kafka logging strategy implementation, which
   requires Kafka as a dependency.
 - 🧪 `spring-uncaught-guard-test-app`: A sample Spring Boot application that demonstrates the library in action and
@@ -249,6 +252,61 @@ Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot 
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {UncaughtGuardSlf4jLoggingStrategy.class}
+)
+public class MySpringBootApplication { 
+    public static void main(String[] args) {
+                SpringApplication.run(MySpringBootApplication.class, args);
+    }
+}
+```
+
+### 📦 REST Logging Strategy
+
+The `REST` logging strategy uses the `RestTemplate` to log uncaught exceptions by sending a POST request to a specified URL.
+The payload sent in the POST request will contain the uncaught exception details, including the stack trace, request data, and the unique trace identifier.
+In particular, the JSON payload will be the result of the serialization of the `UncaughtGuardExceptionTrace` object, which contains all the necessary details about the uncaught exception.
+
+This strategy requires the `spring-web` dependency to be included in your project.
+In order to use the `REST` logging strategy, ensure first of all that you have the core library dependency in your project, in your `pom.xml`.
+You will then also need to add the `spring-uncaught-guard-rest-strategy` dependency that includes  the `UncaughtGuardRestAbstractLoggingStrategy` class.
+
+```xml
+<dependency>
+    <groupId>com.velluto</groupId>
+    <artifactId>spring-uncaught-guard-core</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+<dependency>
+    <groupId>com.velluto</groupId>
+    <artifactId>spring-uncaught-guard-rest-strategy</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+In case of the REST logging strategy, the dependency will expose an abstract class `UncaughtGuardRestAbstractLoggingStrategy` that you will need to extend and implement.
+This is needed in order to specify the endpoint URL where the uncaught exceptions will be sent.
+
+Create then a class that extends `UncaughtGuardRestAbstractLoggingStrategy` and implement the `restEndpoint()` method.
+The `restEndpoint()` method will return the URL of the REST endpoint where the POST request will be sent with the uncaught exception details.
+
+```java
+import com.velluto.springuncaughtguard.rest.UncaughtGuardRestAbstractLoggingStrategy;
+
+public class MyUncaughtGuardRestLoggingStrategy extends UncaughtGuardRestAbstractLoggingStrategy {
+
+    @Override
+    protected String restEndpoint() {
+        return "http://localhost:8080/api/log-exception"; // Replace with your REST endpoint URL
+    }
+}
+```
+
+Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot application class and specify the name of REST logging strategy implementation class in the `loggingStrategies` attribute:
+
+```java
+@SpringBootApplication
+@EnableUncaughtGuard(
+        loggingStrategies = {MyUncaughtGuardRestLoggingStrategy.class}
 )
 public class MySpringBootApplication { 
     public static void main(String[] args) {
