@@ -15,8 +15,8 @@ import java.util.logging.Logger;
  * When an uncaught exception occurs, a POST request is made to the
  * specified REST endpoint with the entire exception trace as the request body.
  */
-public abstract class UncaughtGuardRestLoggingStrategy extends UncaughtGuardLoggingStrategy {
-    private static final Logger logger = Logger.getLogger(UncaughtGuardRestLoggingStrategy.class.getName());
+public abstract class UncaughtGuardRestAbstractLoggingStrategy extends UncaughtGuardLoggingStrategy {
+    private static final Logger logger = Logger.getLogger(UncaughtGuardRestAbstractLoggingStrategy.class.getName());
 
     private String restEndpoint;
     private RestTemplate restTemplate;
