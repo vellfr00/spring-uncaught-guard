@@ -1,5 +1,7 @@
 package com.velluto.uncaughtguard.strategies;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.velluto.uncaughtguard.exceptions.UncaughtGuardMethodParametersEnrichedRuntimeException;
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +21,21 @@ public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggin
         return stringWriter.toString();
     }
 
+    private String getThrowingMethodsLoggableString(RuntimeException exception) {
+        if (!(exception instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException))
+            return "null";
+
+        // use jackson to serialize the throwing methods
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper
+                        .writerWithDefaultPrettyPrinter()
+                        .writeValueAsString(enrichedRuntimeException.getThrowingMethods());
+        } catch (Exception e) {
+            return "Error serializing throwing methods: " + e.getMessage();
+        }
+    }
+
     @Override
     public void log(UncaughtGuardExceptionTrace exceptionTrace) {
         System.err.println(
@@ -30,6 +47,7 @@ public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggin
                         "Query Params : " + exceptionTrace.getQueryParams().toString() + '\n' +
                         "Headers      : " + exceptionTrace.getHeaders().toString() + '\n' +
                         "Body         : " + '\n' + exceptionTrace.getBody() + '\n' +
+                        "Methods      : " + '\n' + getThrowingMethodsLoggableString(exceptionTrace.getException()) + '\n' +
                         "Exception    : " + '\n' + getLoggableExceptionStackTraceString(exceptionTrace.getException())
         );
     }

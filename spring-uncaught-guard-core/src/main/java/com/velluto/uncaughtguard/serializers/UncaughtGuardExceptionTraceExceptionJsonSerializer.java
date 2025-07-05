@@ -3,6 +3,7 @@ package com.velluto.uncaughtguard.serializers;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.velluto.uncaughtguard.exceptions.UncaughtGuardMethodParametersEnrichedRuntimeException;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -24,6 +25,29 @@ public class UncaughtGuardExceptionTraceExceptionJsonSerializer extends JsonSeri
         writeException(gen, value, seen);
     }
 
+    private String getThrownExceptionClassName(Throwable ex) {
+        if (ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException)
+            return ((UncaughtGuardMethodParametersEnrichedRuntimeException) ex).getOriginalExceptionClassName();
+
+        return ex.getClass().getName();
+    }
+
+    private String getThrownExceptionMessage(Throwable ex) {
+        String message = ex.getMessage();
+
+        if (ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException && message != null) {
+            final String prefix = "[ACTUAL Exception: ";
+            if (message.startsWith(prefix)) {
+                int endIndex = message.indexOf("] ");
+                if (endIndex != -1) {
+                    return message.substring(endIndex + 2);
+                }
+            }
+        }
+
+        return (message != null) ? message : "No message available";
+    }
+
     private void writeException(JsonGenerator gen, Throwable ex, Set<Throwable> seen) throws IOException {
         if (seen.contains(ex)) {
             gen.writeStartObject();
@@ -34,12 +58,17 @@ public class UncaughtGuardExceptionTraceExceptionJsonSerializer extends JsonSeri
         seen.add(ex);
 
         gen.writeStartObject();
-        gen.writeStringField("thrownException", ex.getClass().getName());
-        gen.writeStringField("message", ex.getMessage());
+
+        if(ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException)
+            gen.writeObjectField("throwingMethod", enrichedRuntimeException.getThrowingMethods());
+
+        gen.writeStringField("thrownException", getThrownExceptionClassName(ex));
+        gen.writeStringField("message", getThrownExceptionMessage(ex));
         gen.writeArrayFieldStart("stackTrace");
         for (StackTraceElement element : ex.getStackTrace()) {
             gen.writeString(element.toString());
         }
+
         gen.writeEndArray();
 
         Throwable cause = ex.getCause();
