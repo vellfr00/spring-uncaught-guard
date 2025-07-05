@@ -63,12 +63,13 @@ class UncaughtGuardRegistrarTest {
                 String.class,
                 String.class,
                 boolean.class,
+                boolean.class,
                 boolean.class
         );
         method.setAccessible(true);
         Class[] strategies = new Class[]{UncaughtGuardSystemErrorLoggingStrategy.class};
         Class[] excluded = new Class[]{};
-        method.invoke(registrar, registry, strategies, excluded, "err", "log", true, false);
+        method.invoke(registrar, registry, strategies, excluded, "err", "log", true, false, false);
         verify(registry).registerBeanDefinition(eq("uncaughtGuardProperties"), any(RootBeanDefinition.class));
     }
 
