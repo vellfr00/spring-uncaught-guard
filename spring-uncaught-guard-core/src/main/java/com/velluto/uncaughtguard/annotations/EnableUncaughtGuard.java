@@ -1,6 +1,7 @@
 package com.velluto.uncaughtguard.annotations;
 
 import com.velluto.uncaughtguard.advices.UncaughtGuardRestControllerAdvice;
+import com.velluto.uncaughtguard.configurations.UncaughtGuardAsyncConfiguration;
 import com.velluto.uncaughtguard.loggers.UncaughtGuardAsyncLogger;
 import com.velluto.uncaughtguard.registrars.UncaughtGuardRegistrar;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardLoggingStrategy;
@@ -23,6 +24,7 @@ import java.lang.annotation.*;
         UncaughtGuardRegistrar.class,
         UncaughtGuardRestControllerAdvice.class,
         UncaughtGuardExceptionUtils.class,
+        UncaughtGuardAsyncConfiguration.class,
         UncaughtGuardAsyncLogger.class
 })
 public @interface EnableUncaughtGuard {
