@@ -1,5 +1,6 @@
 package com.velluto.uncaughtguard.registrars;
 
+import com.velluto.uncaughtguard.advices.UncaughtGuardMethodParametersEnricherAdvice;
 import com.velluto.uncaughtguard.annotations.EnableUncaughtGuard;
 import com.velluto.uncaughtguard.filters.UncaughtGuardContentRequestCachingFilter;
 import com.velluto.uncaughtguard.properties.UncaughtGuardProperties;
@@ -34,10 +35,12 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
         String logErrorMessage = attrs.getString("logErrorMessage");
         boolean keepThrowingExceptions = attrs.getBoolean("keepThrowingExceptions");
         boolean enableLogRequestBody = attrs.getBoolean("enableLogRequestBody");
+        boolean enableLogThrowingMethodParameters = attrs.getBoolean("enableLogThrowingMethodParameters");
 
-        registerPropertiesBean(registry, strategies, excludedExceptions, httpResponseErrorMessage, logErrorMessage, keepThrowingExceptions, enableLogRequestBody);
+        registerPropertiesBean(registry, strategies, excludedExceptions, httpResponseErrorMessage, logErrorMessage, keepThrowingExceptions, enableLogRequestBody, enableLogThrowingMethodParameters);
         registerLoggingStrategiesBeans(registry, strategies);
         registerRequestCachingFilter(registry, enableLogRequestBody);
+        registerMethodParametersEnricherAdvice(registry, enableLogThrowingMethodParameters);
     }
 
     private Class<? extends UncaughtGuardLoggingStrategy>[] getLoggingStrategies(AnnotationAttributes attrs) {
@@ -56,7 +59,8 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
             String httpResponseErrorMessage,
             String logErrorMessage,
             boolean keepThrowingExceptions,
-            boolean enableLogRequestBody
+            boolean enableLogRequestBody,
+            boolean enableLogThrowingMethodParameters
     ) {
         RootBeanDefinition def = new RootBeanDefinition(UncaughtGuardProperties.class);
         def.getPropertyValues().add("loggingStrategies", strategies);
@@ -70,18 +74,20 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
         logger.fine(String.format(
                 "Successfully registered UncaughtGuard properties.\n" +
                         "Registered properties:\n\n" +
-                        "loggingStrategies        : %s\n" +
-                        "excludedExceptions       : %s\n" +
-                        "httpResponseErrorMessage : %s\n" +
-                        "logErrorMessage          : %s\n" +
-                        "keepThrowingExceptions   : %s\n" +
-                        "enableLogRequestBody     : %s\n",
+                        "loggingStrategies                 : %s\n" +
+                        "excludedExceptions                : %s\n" +
+                        "httpResponseErrorMessage          : %s\n" +
+                        "logErrorMessage                   : %s\n" +
+                        "keepThrowingExceptions            : %s\n" +
+                        "enableLogRequestBody              : %s\n" +
+                        "enableLogThrowingMethodParameters : %s",
                 Arrays.stream(strategies).map(Class::getSimpleName).collect(Collectors.joining(",")),
                 Arrays.stream(excludedExceptions).map(Class::getSimpleName).collect(Collectors.joining(",")),
                 httpResponseErrorMessage,
                 logErrorMessage,
                 keepThrowingExceptions,
-                enableLogRequestBody
+                enableLogRequestBody,
+                enableLogThrowingMethodParameters
         ));
     }
 
@@ -121,6 +127,18 @@ public class UncaughtGuardRegistrar implements ImportBeanDefinitionRegistrar {
         registry.registerBeanDefinition("uncaughtGuardContentRequestCachingFilter", beanDef);
 
         logger.fine("Successfully enabled request body logging, by registering the request content caching filter");
+    }
+
+    private void registerMethodParametersEnricherAdvice(BeanDefinitionRegistry registry, boolean enableLogThrowingMethodParameters) {
+        if (!enableLogThrowingMethodParameters) {
+            logger.fine("Method parameters logging is disabled, skipping method parameters enricher advice registration.");
+            return;
+        }
+
+        RootBeanDefinition beanDef = new RootBeanDefinition(UncaughtGuardMethodParametersEnricherAdvice.class);
+        registry.registerBeanDefinition("uncaughtGuardMethodParametersEnricherAdvice", beanDef);
+
+        logger.fine("Successfully enabled method parameters logging, by registering the method parameters enricher advice");
     }
 
     private String decapitalize(String name) {

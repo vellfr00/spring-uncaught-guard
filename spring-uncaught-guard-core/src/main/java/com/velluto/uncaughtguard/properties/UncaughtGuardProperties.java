@@ -9,6 +9,7 @@ public class UncaughtGuardProperties {
     private String logErrorMessage;
     private boolean keepThrowingExceptions;
     private boolean enableLogRequestBody;
+    private boolean enableLogThrowingMethodParameters;
 
     public Class<? extends UncaughtGuardLoggingStrategy>[] getLoggingStrategies() {
         return loggingStrategies;
@@ -56,6 +57,14 @@ public class UncaughtGuardProperties {
 
     public void setEnableLogRequestBody(boolean enableLogRequestBody) {
         this.enableLogRequestBody = enableLogRequestBody;
+    }
+
+    public boolean isEnableLogThrowingMethodParameters() {
+        return enableLogThrowingMethodParameters;
+    }
+
+    public void setEnableLogThrowingMethodParameters(boolean enableLogThrowingMethodParameters) {
+        this.enableLogThrowingMethodParameters = enableLogThrowingMethodParameters;
     }
 }
 

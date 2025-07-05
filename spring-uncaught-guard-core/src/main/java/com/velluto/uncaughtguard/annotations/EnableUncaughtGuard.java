@@ -26,8 +26,7 @@ import java.lang.annotation.*;
         UncaughtGuardRestControllerAdvice.class,
         UncaughtGuardExceptionUtils.class,
         UncaughtGuardAsyncConfiguration.class,
-        UncaughtGuardAsyncLogger.class,
-        UncaughtGuardMethodParametersEnricherAdvice.class
+        UncaughtGuardAsyncLogger.class
 })
 public @interface EnableUncaughtGuard {
 
@@ -75,9 +74,22 @@ public @interface EnableUncaughtGuard {
      * If true, enables logging of the HTTP request body when an exception is handled.
      * By default, this is set to true.
      * Keep in mind that this will register a filter that caches the request body and this can have an impact on performance.
-     * if you do not want this behavior, set this to false, but then you will not be able to log the request body in case of an exception.
+     * If you do not want this behavior, set this to false, but then you will not be able to log the request body in case of an exception.
      *
      * @return true to enable request body logging, false otherwise
      */
     boolean enableLogRequestBody() default true;
+
+    /**
+     * If true, enables logging of method parameters when an exception is handled.
+     * By default, this is set to true.
+     * This will register an advice that enriches the exception with the method parameters.
+     * This can be useful for debugging purposes, but it can also have an impact on performance.
+     * Keep in mind that this will register an advice that enriches the exception with the method parameters.
+     * This can be useful for debugging purposes, but it can also have an impact on performance.
+     * If you do not want this behavior, set this to false, but then you will not be able to log the method parameters in case of an exception.
+     *
+     * @return true to enable method parameters logging, false otherwise
+     */
+    boolean enableLogThrowingMethodParameters() default true;
 }
