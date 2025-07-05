@@ -1,9 +1,11 @@
 package com.velluto.uncaughtguard.annotations;
 
 import com.velluto.uncaughtguard.advices.UncaughtGuardRestControllerAdvice;
+import com.velluto.uncaughtguard.loggers.UncaughtGuardAsyncLogger;
 import com.velluto.uncaughtguard.registrars.UncaughtGuardRegistrar;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardLoggingStrategy;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardSystemErrorLoggingStrategy;
+import com.velluto.uncaughtguard.utils.UncaughtGuardExceptionUtils;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -17,7 +19,12 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import({UncaughtGuardRegistrar.class, UncaughtGuardRestControllerAdvice.class})
+@Import({
+        UncaughtGuardRegistrar.class,
+        UncaughtGuardRestControllerAdvice.class,
+        UncaughtGuardExceptionUtils.class,
+        UncaughtGuardAsyncLogger.class
+})
 public @interface EnableUncaughtGuard {
 
     /**
