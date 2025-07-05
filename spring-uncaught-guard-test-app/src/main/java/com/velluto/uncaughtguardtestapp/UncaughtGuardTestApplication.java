@@ -4,6 +4,7 @@ import com.velluto.uncaughtguard.annotations.EnableUncaughtGuard;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardJavaLoggerLoggingStrategy;
 import com.velluto.uncaughtguard.strategies.UncaughtGuardSlf4jLoggingStrategy;
 import com.velluto.uncaughtguardtestapp.logging.strategies.UncaughtGuardKafkaLoggingStrategy;
+import com.velluto.uncaughtguardtestapp.logging.strategies.UncaughtGuardRestLoggingStrategy;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -12,6 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         loggingStrategies = {
                 UncaughtGuardSlf4jLoggingStrategy.class,
                 UncaughtGuardJavaLoggerLoggingStrategy.class,
+                UncaughtGuardRestLoggingStrategy.class,
                 UncaughtGuardKafkaLoggingStrategy.class
         }
 )
