@@ -69,6 +69,7 @@ public class UncaughtGuardSlf4jLoggingStrategyTest {
                     eq(mockQueryParams.toString()),
                     eq(mockHeaders.toString()),
                     eq(mockBody),
+                    anyString(),
                     eq(mockException)
             );
         }
