@@ -31,7 +31,7 @@ manual exception management.
 - 🚨 **Automatic Exception Handling**: Effortlessly intercepts and logs uncaught runtime exceptions in your Spring REST
   applications, ensuring no error goes unnoticed.
 - 📝 **Verbose Logging**: Delivers comprehensive logs for every exception, including stack traces and detailed request
-  data such as headers, cookies, and body content.
+  data such as headers, cookies, and body content. Also the parameters passed to the methods that throw the uncaught exceptions are logged!
 - ⚡ **Zero Configuration Required**: Instantly operational with minimal setup—just add the `@EnableUncaughtGuard`
   annotation to your main application class and you’re ready to go.
 - 🐞 **Debug-Friendly**: Assigns a unique identifier to each exception, which is returned in the error response, making
@@ -54,9 +54,14 @@ Its ease of use makes it a game changer, even for older existing applications: y
 
 ## ⚙️ How It Works
 
-Spring Uncaught Guard utilizes Spring's `@RestControllerAdvice` mechanism to seamlessly intercept uncaught exceptions
+Spring Uncaught Guard relies on Spring's `@RestControllerAdvice` mechanism to seamlessly intercept uncaught exceptions
 thrown by your REST controllers. By default, it is configured to handle all exceptions that are subclasses of
 `RuntimeException`, which are commonly used for application-specific errors.
+
+It leverages also the power of Aspect-Oriented Programming (AOP) to intercept method calls that throw uncaught exceptions,
+allowing it to capture the parameters passed to those methods and include them in the logged exception details, useful for debugging purposes.
+In particular, the `@AfterThrowing` advice is used to intercept parameters passed to methods that throw uncaught exceptions
+and that are included in a `@RestController`, `@Service` or `@Repository` class.
 
 If you have defined a custom `@RestControllerAdvice` for a specific exception type, your custom handler will take
 precedence, and those exceptions will not be intercepted by this library. This ensures you retain full control and
@@ -124,18 +129,20 @@ The `@EnableUncaughtGuard` annotation provides several customization options:
   traceId).
 - 📦 **enableLogRequestBody**: If true (default), enables logging of the HTTP request body (may impact performance, but
   if not enabled you will miss request body logging).
+- 🔍 **enableLogThrowingMethodParameters**: If true (default), enables logging of the parameters passed to the methods that throw uncaught exceptions (may impact performance, but if not enabled you will miss parameters logging).
 
 Advanced example:
 
 ```java
 @SpringBootApplication
 @EnableUncaughtGuard(
-        loggingStrategies = {CustomLoggingStrategy.class},
+        loggingStrategies = {MyLoggingStrategy.class, AnotherLoggingStrategy.class},
         excludedExceptions = {IllegalArgumentException.class},
         httpResponseErrorMessage = "Custom internal error message",
         logErrorMessage = "Unhandled exception caught!",
         keepThrowingExceptions = false,
-        enableLogRequestBody = true
+        enableLogRequestBody = true,
+        enableLogThrowingMethodParameters = true
 )
 public class MySpringBootApplication { 
     public static void main(String[] args) {
