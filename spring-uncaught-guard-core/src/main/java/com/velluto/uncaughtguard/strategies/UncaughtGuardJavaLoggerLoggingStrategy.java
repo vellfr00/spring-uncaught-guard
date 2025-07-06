@@ -13,19 +13,11 @@ import java.util.logging.Logger;
  * This strategy logs the exception details using the Logger associated with the class and method that threw the exception.
  */
 public class UncaughtGuardJavaLoggerLoggingStrategy extends UncaughtGuardLoggingStrategy {
-    private String getLoggableThrowingMethodsString(RuntimeException exception) {
+    private String getThrowingMethodsLoggableString(RuntimeException exception) {
         if (!(exception instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException))
-            return "null";
+            return "";
 
-        // use jackson to serialize the throwing methods
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(enrichedRuntimeException.getThrowingMethods());
-        } catch (Exception e) {
-            return "Error serializing throwing methods: " + e.getMessage();
-        }
+        return enrichedRuntimeException.getJSONSerializedThrowingMethods();
     }
 
     @Override
@@ -65,7 +57,7 @@ public class UncaughtGuardJavaLoggerLoggingStrategy extends UncaughtGuardLogging
                         exceptionTrace.getQueryParams().toString(),
                         exceptionTrace.getHeaders().toString(),
                         exceptionTrace.getBody(),
-                        getLoggableThrowingMethodsString(exceptionTrace.getException())
+                        getThrowingMethodsLoggableString(exceptionTrace.getException())
                 ),
                 exceptionTrace.getException()
         );

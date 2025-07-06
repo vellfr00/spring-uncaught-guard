@@ -1,5 +1,6 @@
 package com.velluto.uncaughtguard.exceptions;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.velluto.uncaughtguard.models.UncaughtGuardThrowingMethod;
 
 import java.util.LinkedList;
@@ -8,6 +9,7 @@ import java.util.List;
 public class UncaughtGuardMethodParametersEnrichedRuntimeException extends RuntimeException {
     private final List<UncaughtGuardThrowingMethod> throwingMethods;
     private final String originalExceptionClassName;
+    private final String originalExceptionMessage;
 
     public UncaughtGuardMethodParametersEnrichedRuntimeException(
             RuntimeException originalException,
@@ -19,6 +21,7 @@ public class UncaughtGuardMethodParametersEnrichedRuntimeException extends Runti
 
         this.throwingMethods = buildThrowingMethodsTrace(originalException, throwingMethodSignature, throwingMethodArgs);
         this.originalExceptionClassName = getOriginalExceptionClassName(originalException);
+        this.originalExceptionMessage = originalException.getMessage();
     }
 
     private static List<UncaughtGuardThrowingMethod> buildThrowingMethodsTrace(
@@ -66,5 +69,21 @@ public class UncaughtGuardMethodParametersEnrichedRuntimeException extends Runti
 
     public String getOriginalExceptionClassName() {
         return originalExceptionClassName;
+    }
+
+    public String getOriginalExceptionMessage() {
+        return originalExceptionMessage;
+    }
+
+    public String getJSONSerializedThrowingMethods() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            return objectMapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(this.throwingMethods);
+        } catch (Exception e) {
+            return "Error serializing throwing methods: " + e.getMessage();
+        }
     }
 }

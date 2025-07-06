@@ -10,19 +10,11 @@ import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
  * It requires the SLF4J library to be included in the project dependencies.
  */
 public class UncaughtGuardSlf4jLoggingStrategy extends UncaughtGuardLoggingStrategy {
-    private String getLoggableThrowingMethodsString(RuntimeException exception) {
+    private String getThrowingMethodsLoggableString(RuntimeException exception) {
         if (!(exception instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException))
-            return "null";
+            return "";
 
-        // use jackson to serialize the throwing methods
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper
-                    .writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(enrichedRuntimeException.getThrowingMethods());
-        } catch (Exception e) {
-            return "Error serializing throwing methods: " + e.getMessage();
-        }
+        return enrichedRuntimeException.getJSONSerializedThrowingMethods();
     }
 
     @Override
@@ -57,7 +49,7 @@ public class UncaughtGuardSlf4jLoggingStrategy extends UncaughtGuardLoggingStrat
                 exceptionTrace.getQueryParams().toString(),
                 exceptionTrace.getHeaders().toString(),
                 exceptionTrace.getBody(),
-                getLoggableThrowingMethodsString(exceptionTrace.getException()),
+                getThrowingMethodsLoggableString(exceptionTrace.getException()),
                 exceptionTrace.getException()
         );
     }

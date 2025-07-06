@@ -33,19 +33,10 @@ public class UncaughtGuardExceptionTraceExceptionJsonSerializer extends JsonSeri
     }
 
     private String getThrownExceptionMessage(Throwable ex) {
-        String message = ex.getMessage();
+        if (ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException)
+            return ((UncaughtGuardMethodParametersEnrichedRuntimeException) ex).getOriginalExceptionMessage();
 
-        if (ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException && message != null) {
-            final String prefix = "[ACTUAL Exception: ";
-            if (message.startsWith(prefix)) {
-                int endIndex = message.indexOf("] ");
-                if (endIndex != -1) {
-                    return message.substring(endIndex + 2);
-                }
-            }
-        }
-
-        return (message != null) ? message : "No message available";
+        return ex.getMessage() != null ? ex.getMessage() : "No message available";
     }
 
     private void writeException(JsonGenerator gen, Throwable ex, Set<Throwable> seen) throws IOException {

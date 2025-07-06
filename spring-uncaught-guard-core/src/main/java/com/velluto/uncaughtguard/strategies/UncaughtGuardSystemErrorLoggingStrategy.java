@@ -23,17 +23,9 @@ public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggin
 
     private String getThrowingMethodsLoggableString(RuntimeException exception) {
         if (!(exception instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException))
-            return "null";
+            return "";
 
-        // use jackson to serialize the throwing methods
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper
-                        .writerWithDefaultPrettyPrinter()
-                        .writeValueAsString(enrichedRuntimeException.getThrowingMethods());
-        } catch (Exception e) {
-            return "Error serializing throwing methods: " + e.getMessage();
-        }
+        return enrichedRuntimeException.getJSONSerializedThrowingMethods();
     }
 
     @Override
