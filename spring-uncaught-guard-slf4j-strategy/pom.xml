@@ -11,6 +11,7 @@
 
     <artifactId>spring-uncaught-guard-slf4j-strategy</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <name>Spring Uncaught Guard SLF4J Strategy</name>
     <description>The SLF4J logging strategy for Uncaught Guard, the guardian for uncaught exceptions in your Spring REST
         services
     </description>

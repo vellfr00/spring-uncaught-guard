@@ -10,8 +10,8 @@
 
     <artifactId>spring-uncaught-guard-core</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>spring-uncaught-guard-core</name>
-    <description>The core module of UncaughtGuard, the guardian for uncaught exceptions in your Spring REST services
+    <name>Spring Uncaught Guard Core</name>
+    <description>The core module of Uncaught Guard, the guardian for uncaught exceptions in your Spring REST services
     </description>
     <url/>
     <licenses>

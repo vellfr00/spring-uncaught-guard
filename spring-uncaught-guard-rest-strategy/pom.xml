@@ -11,6 +11,7 @@
 
     <artifactId>spring-uncaught-guard-rest-strategy</artifactId>
     <version>1.0.0-SNAPSHOT</version>
+    <name>Spring Uncaught Guard REST Strategy</name>
     <description>The HTTP REST logging strategy for Uncaught Guard, the guardian for uncaught exceptions in your Spring
         REST services
     </description>

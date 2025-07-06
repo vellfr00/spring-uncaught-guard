@@ -10,7 +10,7 @@
 
     <artifactId>spring-uncaught-guard-test-app</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>spring-uncaught-guard-test-app</name>
+    <name>Spring Uncaught Guard Test App</name>
     <description>Test application for UncaughtGuard, the guardian for uncaught exceptions in your REST services
     </description>
     <url/>
