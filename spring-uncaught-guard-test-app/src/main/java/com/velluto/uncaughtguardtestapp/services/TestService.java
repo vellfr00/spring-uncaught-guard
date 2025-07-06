@@ -16,10 +16,11 @@ public class TestService {
     }
 
     public TestResponseDTO handlePostTest(
-            @PathVariable Integer testId,
-            @RequestParam boolean throwKnown,
-            @RequestBody TestRequestDTO body)
-            throws TestKnownException {
+            Integer testId,
+            boolean throwKnown,
+            TestRequestDTO body,
+            String aTestString
+    ) throws TestKnownException {
         canThrow(throwKnown);
 
         TestResponseDTO responseDTO = new TestResponseDTO();
