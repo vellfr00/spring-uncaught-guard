@@ -10,4 +10,5 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @Configuration
 @EnableAsync
-public class UncaughtGuardAsyncConfiguration { }
+public class UncaughtGuardAsyncConfiguration {
+}

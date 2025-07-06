@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * This exception is used to enrich the original RuntimeException with the method signature and parameters
  * that caused the exception to be thrown, allowing for better debugging and tracing of issues.
- *
+ * <p>
  * It extends RuntimeException and maintains the original exception's class name, message,
  * and stack trace, along with a list of methods that threw the exception.
  * Since the original exception class will be lost in the process of wrapping,
@@ -50,7 +50,7 @@ public class UncaughtGuardMethodParametersEnrichedRuntimeException extends Runti
     }
 
     private static String buildMessage(RuntimeException originalException) {
-        if(originalException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException) {
+        if (originalException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException) {
             return originalException.getMessage();
         } else {
             return "[ACTUAL Exception: " + originalException.getClass().getName() + "] " + originalException.getMessage();
@@ -58,7 +58,7 @@ public class UncaughtGuardMethodParametersEnrichedRuntimeException extends Runti
     }
 
     private static String getOriginalExceptionClassName(RuntimeException originalException) {
-        if(originalException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException) {
+        if (originalException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException) {
             return ((UncaughtGuardMethodParametersEnrichedRuntimeException) originalException).getOriginalExceptionClassName();
         } else {
             return originalException.getClass().getName();
@@ -69,7 +69,7 @@ public class UncaughtGuardMethodParametersEnrichedRuntimeException extends Runti
         this.setStackTrace(originalException.getStackTrace());
         this.initCause(originalException.getCause());
 
-        for(Throwable suppressed : originalException.getSuppressed())
+        for (Throwable suppressed : originalException.getSuppressed())
             this.addSuppressed(suppressed);
     }
 

@@ -14,7 +14,7 @@ import java.io.IOException;
  * but if it fails (e.g., due to a circular reference or other serialization issues),
  * it falls back to writing a string representation of the value.
  */
-public class UncaughtGuardMethodParameterValueJsonSerializer extends JsonSerializer<Object>  {
+public class UncaughtGuardMethodParameterValueJsonSerializer extends JsonSerializer<Object> {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Override

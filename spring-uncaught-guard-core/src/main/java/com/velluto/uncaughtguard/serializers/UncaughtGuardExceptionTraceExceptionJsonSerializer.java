@@ -50,7 +50,7 @@ public class UncaughtGuardExceptionTraceExceptionJsonSerializer extends JsonSeri
 
         gen.writeStartObject();
 
-        if(ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException)
+        if (ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException)
             gen.writeObjectField("throwingMethod", enrichedRuntimeException.getThrowingMethods());
 
         gen.writeStringField("thrownException", getThrownExceptionClassName(ex));

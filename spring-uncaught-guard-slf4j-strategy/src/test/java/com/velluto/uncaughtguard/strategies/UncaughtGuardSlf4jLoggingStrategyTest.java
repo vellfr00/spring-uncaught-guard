@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 public class UncaughtGuardSlf4jLoggingStrategyTest {

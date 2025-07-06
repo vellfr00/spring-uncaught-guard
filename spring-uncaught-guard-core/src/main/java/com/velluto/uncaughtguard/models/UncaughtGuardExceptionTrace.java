@@ -1,10 +1,6 @@
 package com.velluto.uncaughtguard.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.velluto.uncaughtguard.serializers.UncaughtGuardExceptionTraceBodyJsonSerializer;
 import com.velluto.uncaughtguard.serializers.UncaughtGuardExceptionTraceExceptionJsonSerializer;
@@ -12,8 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;

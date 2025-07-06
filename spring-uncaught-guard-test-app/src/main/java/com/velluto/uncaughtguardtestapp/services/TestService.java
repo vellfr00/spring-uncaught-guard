@@ -4,9 +4,6 @@ import com.velluto.uncaughtguardtestapp.exceptions.TestKnownException;
 import com.velluto.uncaughtguardtestapp.models.TestRequestDTO;
 import com.velluto.uncaughtguardtestapp.models.TestResponseDTO;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class TestService {

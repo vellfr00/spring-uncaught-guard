@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 class UncaughtGuardSystemErrorLoggingStrategyTest {
-    private UncaughtGuardExceptionTrace trace;
     private final PrintStream originalErr = System.err;
+    private UncaughtGuardExceptionTrace trace;
     private ByteArrayOutputStream errContent;
 
     @BeforeEach

@@ -64,7 +64,8 @@ class UncaughtGuardLoggingStrategyTest {
         when(properties.getLogErrorMessage()).thenReturn(expectedMessage);
         UncaughtGuardLoggingStrategy strategy = new UncaughtGuardLoggingStrategy() {
             @Override
-            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {}
+            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {
+            }
         };
         // Inject mock properties
         java.lang.reflect.Field field;
@@ -87,7 +88,8 @@ class UncaughtGuardLoggingStrategyTest {
         when(trace.getException()).thenReturn(ex);
         UncaughtGuardLoggingStrategy strategy = new UncaughtGuardLoggingStrategy() {
             @Override
-            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {}
+            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {
+            }
         };
         String result = strategy.getThrowingClassName(trace);
         org.junit.jupiter.api.Assertions.assertEquals("com.example.MyClass", result);
@@ -98,7 +100,8 @@ class UncaughtGuardLoggingStrategyTest {
         when(trace.getException()).thenReturn(null);
         UncaughtGuardLoggingStrategy strategy = new UncaughtGuardLoggingStrategy() {
             @Override
-            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {}
+            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {
+            }
         };
         String result = strategy.getThrowingClassName(trace);
         org.junit.jupiter.api.Assertions.assertEquals(strategy.getClass().getName(), result);
@@ -112,7 +115,8 @@ class UncaughtGuardLoggingStrategyTest {
         when(trace.getException()).thenReturn(ex);
         UncaughtGuardLoggingStrategy strategy = new UncaughtGuardLoggingStrategy() {
             @Override
-            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {}
+            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {
+            }
         };
         String result = strategy.getThrowingMethodName(trace);
         org.junit.jupiter.api.Assertions.assertEquals("myMethod", result);
@@ -123,7 +127,8 @@ class UncaughtGuardLoggingStrategyTest {
         when(trace.getException()).thenReturn(null);
         UncaughtGuardLoggingStrategy strategy = new UncaughtGuardLoggingStrategy() {
             @Override
-            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {}
+            protected void log(UncaughtGuardExceptionTrace exceptionTrace) {
+            }
         };
         String result = strategy.getThrowingMethodName(trace);
         org.junit.jupiter.api.Assertions.assertEquals("log", result);

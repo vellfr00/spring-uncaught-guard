@@ -20,6 +20,7 @@ import java.util.logging.Logger;
  * in a custom exception that includes the method signature and parameters.
  * </p>
  * It is applied to methods within classes annotated with
+ *
  * @RestController, @Service, or @Repository.
  */
 @Aspect
@@ -37,14 +38,14 @@ public class UncaughtGuardMethodParametersEnricherAdvice {
                     "@within(org.springframework.stereotype.Repository))",
             throwing = "throwable"
     )
-    public void captureMethodParameters(JoinPoint joinPoint, Throwable throwable){
+    public void captureMethodParameters(JoinPoint joinPoint, Throwable throwable) {
         String className = joinPoint.getTarget().getClass().getName();
         String methodSignature = joinPoint.getSignature().toString();
         Object[] methodArgs = joinPoint.getArgs();
 
         logger.fine("Triggered parameters enrichment advice for method: " + methodSignature + " in class: " + className);
 
-        if(!(throwable instanceof RuntimeException runtimeException)) {
+        if (!(throwable instanceof RuntimeException runtimeException)) {
             logger.fine("Thrown exception from method: " + methodSignature + " in class: " + className + " is not a RuntimeException, no enrichment applied");
             return;
         }

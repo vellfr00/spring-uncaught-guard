@@ -1,6 +1,5 @@
 package com.velluto.uncaughtguard.strategies;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.velluto.uncaughtguard.exceptions.UncaughtGuardMethodParametersEnrichedRuntimeException;
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 

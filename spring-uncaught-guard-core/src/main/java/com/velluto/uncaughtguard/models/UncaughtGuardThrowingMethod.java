@@ -23,8 +23,8 @@ public class UncaughtGuardThrowingMethod {
             return new UncaughtGuardThrowingMethodParameter[0];
 
         return Arrays.stream(parameters)
-                        .map(UncaughtGuardThrowingMethodParameter::new)
-                        .toArray(UncaughtGuardThrowingMethodParameter[]::new);
+                .map(UncaughtGuardThrowingMethodParameter::new)
+                .toArray(UncaughtGuardThrowingMethodParameter[]::new);
     }
 
     public String getMethodSignature() {

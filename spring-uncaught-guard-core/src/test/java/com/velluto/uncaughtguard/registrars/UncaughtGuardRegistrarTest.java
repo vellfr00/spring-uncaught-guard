@@ -126,7 +126,7 @@ class UncaughtGuardRegistrarTest {
         method.setAccessible(true);
         Class[] strategies = new Class[]{AbstractStrategy.class};
         InvocationTargetException exception = assertThrows(InvocationTargetException.class, () ->
-            method.invoke(registrar, registry, (Object) strategies)
+                method.invoke(registrar, registry, (Object) strategies)
         );
         Throwable cause = exception.getCause();
         assertInstanceOf(IllegalArgumentException.class, cause);

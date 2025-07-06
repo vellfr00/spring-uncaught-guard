@@ -5,7 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class UncaughtGuardExceptionUtilsTest {
     private UncaughtGuardExceptionUtils utils;
@@ -24,9 +25,6 @@ class UncaughtGuardExceptionUtilsTest {
             throw new RuntimeException(e);
         }
     }
-
-    static class CustomException extends RuntimeException {}
-    static class AnotherException extends RuntimeException {}
 
     @Test
     void testIsExceptionExcluded_returnsTrueIfExcluded() {
@@ -53,6 +51,12 @@ class UncaughtGuardExceptionUtilsTest {
     void testIsExceptionExcluded_nullArrayReturnsNPE() {
         when(properties.getExcludedExceptions()).thenReturn(null);
         assertThrows(NullPointerException.class, () -> utils.isExceptionExcluded(new CustomException()));
+    }
+
+    static class CustomException extends RuntimeException {
+    }
+
+    static class AnotherException extends RuntimeException {
     }
 }
 

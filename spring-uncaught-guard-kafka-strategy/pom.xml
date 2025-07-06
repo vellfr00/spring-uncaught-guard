@@ -11,7 +11,9 @@
 
     <artifactId>spring-uncaught-guard-kafka-strategy</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <description>The Kafka logging strategy for Uncaught Guard, the guardian for uncaught exceptions in your Spring REST services</description>
+    <description>The Kafka logging strategy for Uncaught Guard, the guardian for uncaught exceptions in your Spring REST
+        services
+    </description>
     <url/>
     <licenses>
         <license/>

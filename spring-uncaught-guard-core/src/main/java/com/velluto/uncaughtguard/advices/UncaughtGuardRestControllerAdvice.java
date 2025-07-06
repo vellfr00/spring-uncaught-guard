@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 /**
  * This class is a Spring REST Controller Advice that handles uncaught exceptions
  * thrown by REST controllers.
- *
+ * <p>
  * It captures the exception, logs it asynchronously, and returns a standardized HTTP response
  * with a trace ID for tracking purposes (if cofigured to do so).
  */

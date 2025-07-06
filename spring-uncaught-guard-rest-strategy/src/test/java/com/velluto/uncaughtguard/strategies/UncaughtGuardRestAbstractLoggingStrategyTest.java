@@ -3,7 +3,6 @@ package com.velluto.uncaughtguard.strategies;
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.InvocationTargetException;
