@@ -24,7 +24,10 @@ import java.util.stream.Collectors;
  * This class represents an uncaught exception trace in the Uncaught Guard framework.
  * It captures details about the HTTP request that caused the exception,
  * including the request method, path, query parameters, headers, and body.
- * It also includes the exception itself and a unique trace ID for tracking purposes.
+ * It also includes the exception itself and the parameters passed to the methods that
+ * threw the exception.
+ * Each uncaught exception trace is assigned a unique trace ID and an incident timestamp
+ * to help identify and track the incident.
  * <p>
  * From an exception trace it is possible to retrieve the HTTP response DTO
  * which contains the incident timestamp, trace ID, and an error message.

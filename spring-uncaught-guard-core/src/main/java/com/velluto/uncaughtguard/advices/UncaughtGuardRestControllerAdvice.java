@@ -14,6 +14,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.logging.Logger;
 
+/**
+ * This class is a Spring REST Controller Advice that handles uncaught exceptions
+ * thrown by REST controllers.
+ *
+ * It captures the exception, logs it asynchronously, and returns a standardized HTTP response
+ * with a trace ID for tracking purposes (if cofigured to do so).
+ */
 @RestControllerAdvice
 public class UncaughtGuardRestControllerAdvice {
     private static final Logger logger = Logger.getLogger(UncaughtGuardRestControllerAdvice.class.getName());

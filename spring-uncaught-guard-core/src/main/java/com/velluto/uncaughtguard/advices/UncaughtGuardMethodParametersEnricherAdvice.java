@@ -10,6 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.logging.Logger;
 
+/**
+ * Aspect that enriches the parameters of methods in Spring components
+ * when a RuntimeException is thrown, allowing for better debugging and
+ * error handling.
+ * </p>
+ * This aspect captures the method parameters passed to the method
+ * that threw the exception, and wraps the original RuntimeException
+ * in a custom exception that includes the method signature and parameters.
+ * </p>
+ * It is applied to methods within classes annotated with
+ * @RestController, @Service, or @Repository.
+ */
 @Aspect
 public class UncaughtGuardMethodParametersEnricherAdvice {
     private final Logger logger = Logger.getLogger(UncaughtGuardMethodParametersEnricherAdvice.class.getName());

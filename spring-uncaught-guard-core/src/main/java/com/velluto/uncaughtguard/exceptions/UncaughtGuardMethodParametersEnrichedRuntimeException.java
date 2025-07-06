@@ -6,6 +6,16 @@ import com.velluto.uncaughtguard.models.UncaughtGuardThrowingMethod;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This exception is used to enrich the original RuntimeException with the method signature and parameters
+ * that caused the exception to be thrown, allowing for better debugging and tracing of issues.
+ *
+ * It extends RuntimeException and maintains the original exception's class name, message,
+ * and stack trace, along with a list of methods that threw the exception.
+ * Since the original exception class will be lost in the process of wrapping,
+ * this exception also stores the original exception class name and appends it by default
+ * in the exception message. The original exception message is therefore also stored.
+ */
 public class UncaughtGuardMethodParametersEnrichedRuntimeException extends RuntimeException {
     private final List<UncaughtGuardThrowingMethod> throwingMethods;
     private final String originalExceptionClassName;

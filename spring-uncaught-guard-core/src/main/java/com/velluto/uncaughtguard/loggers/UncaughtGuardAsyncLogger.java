@@ -11,6 +11,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.logging.Logger;
 
+/**
+ * UncaughtGuardAsyncLogger is responsible for logging uncaught exceptions asynchronously.
+ * It uses the configured logging strategies to log the exception trace.
+ * If no strategy succeeds, it falls back to the default system error logging strategy.
+ * It is run in a separate thread to avoid blocking the main application thread and
+ * to ensure that the logging does not interfere with the application's performance
+ * and HTTP request-response cycle.
+ */
 @Component
 public class UncaughtGuardAsyncLogger {
     private static final Logger logger = Logger.getLogger(UncaughtGuardAsyncLogger.class.getName());

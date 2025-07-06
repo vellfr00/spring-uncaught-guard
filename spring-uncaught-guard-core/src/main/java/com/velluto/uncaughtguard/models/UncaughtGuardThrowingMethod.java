@@ -2,6 +2,13 @@ package com.velluto.uncaughtguard.models;
 
 import java.util.Arrays;
 
+/**
+ * Represents a method that was invoked and threw an exception,
+ * handled by UncaughtGuard.
+ * <p>
+ * This class encapsulates the method signature and the parameters
+ * passed to the method at the time of the exception.
+ */
 public class UncaughtGuardThrowingMethod {
     private final String methodSignature;
     private final UncaughtGuardThrowingMethodParameter[] passedParameters;
