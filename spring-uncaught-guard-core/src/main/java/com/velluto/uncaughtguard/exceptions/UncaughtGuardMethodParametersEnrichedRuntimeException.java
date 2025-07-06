@@ -31,7 +31,7 @@ public class UncaughtGuardMethodParametersEnrichedRuntimeException extends Runti
 
         this.throwingMethods = buildThrowingMethodsTrace(originalException, throwingMethodSignature, throwingMethodArgs);
         this.originalExceptionClassName = getOriginalExceptionClassName(originalException);
-        this.originalExceptionMessage = originalException.getMessage();
+        this.originalExceptionMessage = getOriginalExceptionMessage(originalException);
     }
 
     private static List<UncaughtGuardThrowingMethod> buildThrowingMethodsTrace(
@@ -54,6 +54,14 @@ public class UncaughtGuardMethodParametersEnrichedRuntimeException extends Runti
             return originalException.getMessage();
         } else {
             return "[ACTUAL Exception: " + originalException.getClass().getName() + "] " + originalException.getMessage();
+        }
+    }
+
+    private static String getOriginalExceptionMessage(RuntimeException originalException) {
+        if (originalException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException) {
+            return ((UncaughtGuardMethodParametersEnrichedRuntimeException) originalException).getOriginalExceptionMessage();
+        } else {
+            return originalException.getMessage();
         }
     }
 
