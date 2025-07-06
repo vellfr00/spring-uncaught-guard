@@ -37,28 +37,26 @@ class UncaughtGuardMethodParameterValueJsonSerializerTest {
 
     @Test
     void testSerialize_FallbackToString() throws IOException {
-        Object problematic = new         class SelfRef {
-            Object ref = this;
+        Object problematic = new Object() {
+            @Override
+            public String toString() {
+                return "fallback-value";
+            }
         };
         UncaughtGuardMethodParameterValueJsonSerializer spySerializer = spy(serializer);
         doThrow(new RuntimeException("fail"))
                 .when(spySerializer)
                 .serialize(any(), any(), any());
         // Forcing fallback by calling the real serializer with a mock that throws in valueToTree
-        UncaughtGuardMethodParameterValueJsonSerializer fallbackSerializer = new Object() {
-            @Override
-            public String toString() {
-                return "fallback-value";
-            }
-        };
-        // Actually, to test fallback, we can use a value that Jackson cannot serialize, e.g. a self-referencing object
-UncaughtGuardMethodParameterValueJsonSerializer() {
+        UncaughtGuardMethodParameterValueJsonSerializer fallbackSerializer = new UncaughtGuardMethodParameterValueJsonSerializer() {
             @Override
             public void serialize(Object value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
                 if (value == problematic) throw new RuntimeException("fail");
                 super.serialize(value, gen, serializers);
             }
-        }
+        };
+        // Actually, to test fallback, we can use a value that Jackson cannot serialize, e.g. a self-referencing object
+        class SelfRef { Object ref = this; }
         SelfRef self = new SelfRef();
         fallbackSerializer.serialize(self, gen, serializers);
         verify(gen).writeString(anyString());
@@ -67,11 +65,7 @@ UncaughtGuardMethodParameterValueJsonSerializer() {
     static class TestObj {
         public String foo;
         public int bar;
-
-        public TestObj(String foo, int bar) {
-            this.foo = foo;
-            this.bar = bar;
-        }
+        public TestObj(String foo, int bar) { this.foo = foo; this.bar = bar; }
     }
 }
 
