@@ -12,6 +12,13 @@ import java.nio.file.Path;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+/**
+ * Abstract strategy for logging uncaught exceptions to the file system.
+ * It saves exception traces to files in a specified directory, into a file named with the trace ID.
+ * Developers must extend this class and implement the filePath() method to provide the directory path
+ * where the log files will be stored.
+ * The file path must be valid, not null nor empty.
+ */
 public abstract class UncaughtGuardFileSystemAbstractLoggingStrategy extends UncaughtGuardLoggingStrategy {
     private final Logger logger = Logger.getLogger(UncaughtGuardFileSystemAbstractLoggingStrategy.class.getName());
 

@@ -16,6 +16,7 @@ The Guardian for uncaught exceptions in your Spring REST services.
         - [📦 System.err Logging Strategy](#-systemerr-logging-strategy)
         - [📦 Java Logger Logging Strategy](#-java-logger-logging-strategy)
         - [📦 SLF4J Logging Strategy](#-slf4j-logging-strategy)
+        - [📦 File System Logging Strategy](#-file-system-logging-strategy)
         - [📦 REST Logging Strategy](#-rest-logging-strategy)
         - [📦 Kafka Logging Strategy](#-kafka-logging-strategy)
     - [🛠️ Create a Custom Logging Strategy](#-create-a-custom-logging-strategy)
@@ -88,6 +89,8 @@ returned to the client, making debugging and error tracking straightforward.
 - 📦 `spring-uncaught-guard-core`: Contains the core library code, alongside with implementations of the `System.err`
   logging strategy and the `Java Logger` logging strategy, which are basic implementations and do not require any other
   dependencies.
+- 📦 `spring-uncaught-guard-file-system-strategy`: Contains the File System logging strategy implementation,
+  which requires the `java.nio.file` as a dependency.
 - 📦 `spring-uncaught-guard-slf4j-strategy`: Contains the SLF4J logging strategy implementation, which requires SLF4J as
   a dependency.
 - 📦 `spring-uncaught-guard-rest-strategy`: Contains the REST logging strategy implementation, which requires the
@@ -284,6 +287,66 @@ Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot 
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {UncaughtGuardSlf4jLoggingStrategy.class}
+)
+public class MySpringBootApplication { 
+    public static void main(String[] args) {
+                SpringApplication.run(MySpringBootApplication.class, args);
+    }
+}
+```
+
+### 📦 File System Logging Strategy
+
+The `File System` logging strategy uses the Java NIO file system API to log uncaught exceptions to a file.
+The file will be created in the specified directory, and the name of the file will be the trace identifier of the
+uncaught exception, with a `.log` extension.
+It requires the `spring-uncaught-guard-file-system-strategy` dependency to be included in your project.
+
+In order to use the `File System` logging strategy, ensure first of all that you have the core library dependency in
+your project, in your `pom.xml`.
+You will then also need to add the `spring-uncaught-guard-file-system-strategy` dependency that includes the
+`UncaughtGuardFileSystemAbstractLoggingStrategy` implementation class:
+
+```xml
+<dependency>
+    <groupId>com.velluto</groupId>
+    <artifactId>spring-uncaught-guard-core</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+<dependency>
+    <groupId>com.velluto</groupId>
+    <artifactId>spring-uncaught-guard-file-system-strategy</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+In case of the File System logging strategy, the dependency will expose an abstract class
+`UncaughtGuardFileSystemAbstractLoggingStrategy` that you will need to extend and implement.
+This is needed in order to specify the directory where the uncaught exceptions will be logged.
+
+Create then a class that extends `UncaughtGuardFileSystemAbstractLoggingStrategy` and implement the `filePath()`
+method.
+The `filePath()` method will return the path of the directory where the uncaught exceptions will be logged.
+
+```java
+import com.velluto.springuncaughtguard.filesystem.UncaughtGuardFileSystemAbstractLoggingStrategy;
+
+public class MyUncaughtGuardFileSystemLoggingStrategy extends UncaughtGuardFileSystemAbstractLoggingStrategy {
+
+    @Override
+    protected String filePath() {
+        return "/var/logs/uncaught-exceptions"; // Replace with your desired log directory path
+    }
+}
+```
+
+Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot application class and specify the name
+of File System logging strategy implementation class in the `loggingStrategies` attribute:
+
+```java
+@SpringBootApplication
+@EnableUncaughtGuard(
+        loggingStrategies = {MyUncaughtGuardFileSystemLoggingStrategy.class}
 )
 public class MySpringBootApplication { 
     public static void main(String[] args) {
