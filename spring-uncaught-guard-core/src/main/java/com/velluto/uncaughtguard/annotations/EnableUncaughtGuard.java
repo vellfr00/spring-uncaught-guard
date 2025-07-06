@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import java.lang.annotation.*;
 
 /**
- * Enables the UncaughtGuard exception handling mechanism for a Spring application.
+ * Enables the Uncaught Guard exception handling mechanism for a Spring application.
  * <p>
  * This annotation allows customization of logging strategies, excluded exceptions,
  * error messages, and other behaviors related to uncaught exception handling.
