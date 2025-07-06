@@ -1,11 +1,11 @@
 package com.velluto.uncaughtguard.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.velluto.uncaughtguard.serializers.UncaughtGuardMethodParameterValueSerializer;
+import com.velluto.uncaughtguard.serializers.UncaughtGuardMethodParameterValueJsonSerializer;
 
 public class UncaughtGuardThrowingMethodParameter {
     private final String typeClassName;
-    @JsonSerialize(using = UncaughtGuardMethodParameterValueSerializer.class)
+    @JsonSerialize(using = UncaughtGuardMethodParameterValueJsonSerializer.class)
     private final Object value;
 
     public UncaughtGuardThrowingMethodParameter(Object parameter) {
