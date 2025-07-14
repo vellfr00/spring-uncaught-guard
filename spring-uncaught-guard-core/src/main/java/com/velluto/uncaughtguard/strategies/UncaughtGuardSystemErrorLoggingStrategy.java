@@ -16,13 +16,6 @@ import java.util.List;
  * If many logging strategies are defined, and they all fail to log, this one will be used as a fallback.
  */
 public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggingStrategy {
-    private String getLoggableExceptionStackTraceString(RuntimeException exception) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        exception.printStackTrace(printWriter);
-        return stringWriter.toString();
-    }
-
     @Override
     public void log(UncaughtGuardExceptionTrace exceptionTrace) {
         System.err.println(
@@ -35,7 +28,7 @@ public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggin
                         "Headers      : " + exceptionTrace.getHeaders().toString() + '\n' +
                         "Body         : " + '\n' + exceptionTrace.getBody() + '\n' +
                         "Methods      : " + '\n' + exceptionTrace.getJSONSerializedThrowingMethods() + '\n' +
-                        "Exception    : " + '\n' + getLoggableExceptionStackTraceString(exceptionTrace.getException())
+                        "Exception    : " + '\n' + exceptionTrace.getLoggableExceptionStackTrace()
         );
     }
 }

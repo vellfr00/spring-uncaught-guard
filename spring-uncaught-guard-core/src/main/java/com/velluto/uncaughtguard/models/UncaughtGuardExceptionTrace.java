@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
@@ -163,6 +165,14 @@ public class UncaughtGuardExceptionTrace {
 
     public List<UncaughtGuardThrowingMethod> getThrowingMethods() {
         return throwingMethods;
+    }
+
+    @JsonIgnore
+    public String getLoggableExceptionStackTrace() {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
+        return stringWriter.toString();
     }
 
     @JsonIgnore
