@@ -1,12 +1,9 @@
 package com.velluto.uncaughtguard.strategies;
 
-import com.velluto.uncaughtguard.exceptions.UncaughtGuardMethodParametersEnrichedRuntimeException;
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 import jakarta.annotation.PostConstruct;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -80,7 +77,7 @@ public abstract class UncaughtGuardFileSystemAbstractLoggingStrategy extends Unc
             // create a file with the trace ID as the name in the specified file path
             Path logFilePath = Path.of(filePath, traceId + ".log");
             Files.createDirectories(logFilePath.getParent());
-            Files.writeString(logFilePath,getLoggableExceptionTraceString(exceptionTrace));
+            Files.writeString(logFilePath, getLoggableExceptionTraceString(exceptionTrace));
         } catch (IOException e) {
             throw new RuntimeException("An error occurred while logging using File System Strategy exception with TraceID: " + traceId, e);
         }

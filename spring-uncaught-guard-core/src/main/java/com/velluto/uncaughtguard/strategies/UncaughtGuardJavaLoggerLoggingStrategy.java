@@ -1,6 +1,5 @@
 package com.velluto.uncaughtguard.strategies;
 
-import com.velluto.uncaughtguard.exceptions.UncaughtGuardMethodParametersEnrichedRuntimeException;
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
 
 import java.util.logging.Level;

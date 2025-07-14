@@ -1,14 +1,6 @@
 package com.velluto.uncaughtguard.strategies;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.velluto.uncaughtguard.exceptions.UncaughtGuardMethodParametersEnrichedRuntimeException;
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
-import com.velluto.uncaughtguard.models.UncaughtGuardThrowingMethod;
-
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.List;
 
 /**
  * A logging strategy for uncaught exceptions that logs the details to the standard error output.

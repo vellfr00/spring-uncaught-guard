@@ -105,6 +105,7 @@ returned to the client, making debugging and error tracking straightforward.
 First of all, add the dependency to your project. If you are using Maven, add the following to your `pom.xml`:
 
 ```xml
+
 <dependency>
     <groupId>com.velluto</groupId>
     <artifactId>spring-uncaught-guard-core</artifactId>
@@ -116,11 +117,12 @@ Add then the `@EnableUncaughtGuard` annotation to your main Spring Boot applicat
 exception handling:
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```
@@ -149,6 +151,7 @@ The `@EnableUncaughtGuard` annotation provides several customization options:
 Advanced example:
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {MyLoggingStrategy.class, AnotherLoggingStrategy.class},
@@ -159,9 +162,9 @@ Advanced example:
         enableLogRequestBody = true,
         enableLogThrowingMethodParameters = true
 )
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```
@@ -192,6 +195,7 @@ In order to use the `System.err` logging strategy, ensure that you have the `spr
 your project, in your `pom.xml`:
 
 ```xml
+
 <dependency>
     <groupId>com.velluto</groupId>
     <artifactId>spring-uncaught-guard-core</artifactId>
@@ -203,11 +207,12 @@ Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot 
 by default:
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```
@@ -215,13 +220,14 @@ public class MySpringBootApplication {
 You can also explicitly specify the `System.err` logging strategy in the `@EnableUncaughtGuard` annotation:
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {UncaughtGuardSystemErrLoggingStrategy.class}
 )
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```
@@ -236,6 +242,7 @@ In order to use the `Java Logger` logging strategy, ensure that you have the `sp
 your project, in your `pom.xml`:
 
 ```xml
+
 <dependency>
     <groupId>com.velluto</groupId>
     <artifactId>spring-uncaught-guard-core</artifactId>
@@ -247,13 +254,14 @@ Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot 
 `UncaughtGuardJavaLoggerLoggingStrategy` logging strategy in the `loggingStrategies` attribute:
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {UncaughtGuardJavaLoggerLoggingStrategy.class}
 )
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```
@@ -268,15 +276,16 @@ You will then also need to add the `spring-uncaught-guard-slf4j-strategy` depend
 and the `UncaughtGuardSlf4jLoggingStrategy` implementation class:
 
 ```xml
+
 <dependency>
     <groupId>com.velluto</groupId>
     <artifactId>spring-uncaught-guard-core</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 </dependency>
 <dependency>
-    <groupId>com.velluto</groupId>
-    <artifactId>spring-uncaught-guard-slf4j-strategy</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+<groupId>com.velluto</groupId>
+<artifactId>spring-uncaught-guard-slf4j-strategy</artifactId>
+<version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -284,13 +293,14 @@ Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot 
 `UncaughtGuardSlf4jLoggingStrategy` logging strategy in the `loggingStrategies` attribute:
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {UncaughtGuardSlf4jLoggingStrategy.class}
 )
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```
@@ -308,15 +318,16 @@ You will then also need to add the `spring-uncaught-guard-file-system-strategy` 
 `UncaughtGuardFileSystemAbstractLoggingStrategy` implementation class:
 
 ```xml
+
 <dependency>
     <groupId>com.velluto</groupId>
     <artifactId>spring-uncaught-guard-core</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 </dependency>
 <dependency>
-    <groupId>com.velluto</groupId>
-    <artifactId>spring-uncaught-guard-file-system-strategy</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+<groupId>com.velluto</groupId>
+<artifactId>spring-uncaught-guard-file-system-strategy</artifactId>
+<version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -344,13 +355,14 @@ Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot 
 of File System logging strategy implementation class in the `loggingStrategies` attribute:
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {MyUncaughtGuardFileSystemLoggingStrategy.class}
 )
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```
@@ -371,15 +383,16 @@ You will then also need to add the `spring-uncaught-guard-rest-strategy` depende
 `UncaughtGuardRestAbstractLoggingStrategy` class.
 
 ```xml
+
 <dependency>
     <groupId>com.velluto</groupId>
     <artifactId>spring-uncaught-guard-core</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 </dependency>
 <dependency>
-    <groupId>com.velluto</groupId>
-    <artifactId>spring-uncaught-guard-rest-strategy</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+<groupId>com.velluto</groupId>
+<artifactId>spring-uncaught-guard-rest-strategy</artifactId>
+<version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -407,13 +420,14 @@ Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot 
 of REST logging strategy implementation class in the `loggingStrategies` attribute:
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {MyUncaughtGuardRestLoggingStrategy.class}
 )
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```
@@ -428,15 +442,16 @@ You will then also need to add the `spring-uncaught-guard-kafka-strategy` depend
 and the `UncaughtGuardKafkaAbstractLoggingStrategy` class.
 
 ```xml
+
 <dependency>
     <groupId>com.velluto</groupId>
     <artifactId>spring-uncaught-guard-core</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 </dependency>
 <dependency>
-    <groupId>com.velluto</groupId>
-    <artifactId>spring-uncaught-guard-kafka-strategy</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+<groupId>com.velluto</groupId>
+<artifactId>spring-uncaught-guard-kafka-strategy</artifactId>
+<version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -496,13 +511,14 @@ Then, simply add the `@EnableUncaughtGuard` annotation to your main Spring Boot 
 of Kafka logging strategy implementation class in the `loggingStrategies` attribute:
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {MyUncaughtGuardKafkaLoggingStrategy.class}
 )
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```
@@ -537,13 +553,14 @@ public class MyCustomLoggingStrategy extends UncaughtGuardLoggingStrategy {
 ```
 
 ```java
+
 @SpringBootApplication
 @EnableUncaughtGuard(
         loggingStrategies = {MyCustomLoggingStrategy.class}
 )
-public class MySpringBootApplication { 
+public class MySpringBootApplication {
     public static void main(String[] args) {
-                SpringApplication.run(MySpringBootApplication.class, args);
+        SpringApplication.run(MySpringBootApplication.class, args);
     }
 }
 ```

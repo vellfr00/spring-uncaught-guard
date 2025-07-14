@@ -183,8 +183,8 @@ public class UncaughtGuardExceptionTrace {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper
-                        .writerWithDefaultPrettyPrinter()
-                        .writeValueAsString(throwingMethods);
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(throwingMethods);
         } catch (JsonProcessingException e) {
             return "Error serializing throwing methods: " + e.getMessage();
         }

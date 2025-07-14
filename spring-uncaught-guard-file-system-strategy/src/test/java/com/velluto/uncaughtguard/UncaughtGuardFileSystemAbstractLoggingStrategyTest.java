@@ -18,9 +18,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UncaughtGuardFileSystemAbstractLoggingStrategyTest {
+    @TempDir
+    Path tempDir;
     private UncaughtGuardFileSystemAbstractLoggingStrategy strategy;
     private UncaughtGuardExceptionTrace trace;
-    @TempDir Path tempDir;
 
     @BeforeEach
     void setUp() {
@@ -39,6 +40,7 @@ public class UncaughtGuardFileSystemAbstractLoggingStrategyTest {
             public String filePath() {
                 return tempDir.toString();
             }
+
             @Override
             protected String getLogErrorMessage() {
                 return "Error";
@@ -85,6 +87,7 @@ public class UncaughtGuardFileSystemAbstractLoggingStrategyTest {
             public String filePath() {
                 return null;
             }
+
             @Override
             protected String getLogErrorMessage() {
                 return "Error";
@@ -107,6 +110,7 @@ public class UncaughtGuardFileSystemAbstractLoggingStrategyTest {
             public String filePath() {
                 return "";
             }
+
             @Override
             protected String getLogErrorMessage() {
                 return "Error";
