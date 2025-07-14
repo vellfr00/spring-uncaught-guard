@@ -65,10 +65,7 @@ public class UncaughtGuardMethodParametersEnricherAdviceTest {
                 UncaughtGuardMethodParametersEnrichedRuntimeException.class,
                 () -> advice.captureMethodParameters(joinPoint, runtimeException)
         );
-        assertEquals(runtimeException.getStackTrace().length, thrown.getStackTrace().length);
-        assertEquals(runtimeException.getClass().getName(), thrown.getOriginalExceptionClassName());
-        assertEquals(runtimeException.getCause(), thrown.getCause());
-        assertTrue(thrown.getMessage().contains(runtimeException.getMessage()));
+        assertEquals(runtimeException, thrown.getOriginalExceptionReference());
         assertEquals(1, thrown.getThrowingMethods().size());
         assertEquals("testMethod()", thrown.getThrowingMethods().get(0).getMethodSignature());
         assertEquals(2, thrown.getThrowingMethods().get(0).getPassedParameters().length);

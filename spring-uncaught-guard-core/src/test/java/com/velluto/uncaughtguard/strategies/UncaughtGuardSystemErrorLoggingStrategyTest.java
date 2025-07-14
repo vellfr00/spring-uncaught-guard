@@ -26,18 +26,6 @@ class UncaughtGuardSystemErrorLoggingStrategyTest {
     }
 
     @Test
-    void getLoggableExceptionStackTraceString_returnsStackTrace() throws Exception {
-        UncaughtGuardSystemErrorLoggingStrategy strategy = new UncaughtGuardSystemErrorLoggingStrategy();
-        RuntimeException ex = new RuntimeException("Test stack trace");
-        java.lang.reflect.Method method = UncaughtGuardSystemErrorLoggingStrategy.class.getDeclaredMethod("getLoggableExceptionStackTraceString", RuntimeException.class);
-        method.setAccessible(true);
-        String stackTrace = (String) method.invoke(strategy, ex);
-        assertNotNull(stackTrace);
-        assertTrue(stackTrace.contains("Test stack trace"));
-        assertTrue(stackTrace.contains("java.lang.RuntimeException"));
-    }
-
-    @Test
     void log_writesToSystemErr() {
         when(trace.getTraceId()).thenReturn(java.util.UUID.randomUUID());
         when(trace.getIncidentTimestamp()).thenReturn(java.time.LocalDateTime.now());

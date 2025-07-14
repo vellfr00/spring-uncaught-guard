@@ -25,6 +25,7 @@ public class UncaughtGuardSlf4jLoggingStrategyTest {
     private Map<String, String> mockQueryParams;
     private Map<String, String> mockHeaders;
     private String mockBody;
+    private String mockMethods;
     private RuntimeException mockException;
 
     @BeforeEach
@@ -37,6 +38,7 @@ public class UncaughtGuardSlf4jLoggingStrategyTest {
         mockPath = "/api/test";
         mockQueryParams = Map.of("param1", "value1", "param2", "value2");
         mockHeaders = Map.of("Header1", "Value1", "Header2", "Value2");
+        mockMethods = "[]";
         mockBody = "{\"key\":\"value\"}";
         mockException = new RuntimeException("Test exception");
 
@@ -47,6 +49,7 @@ public class UncaughtGuardSlf4jLoggingStrategyTest {
         when(trace.getQueryParams()).thenReturn(mockQueryParams);
         when(trace.getHeaders()).thenReturn(mockHeaders);
         when(trace.getBody()).thenReturn(mockBody);
+        when(trace.getJSONSerializedThrowingMethods()).thenReturn(mockMethods);
         when(trace.getException()).thenReturn(mockException);
     }
 
@@ -70,7 +73,7 @@ public class UncaughtGuardSlf4jLoggingStrategyTest {
                     eq(mockQueryParams.toString()),
                     eq(mockHeaders.toString()),
                     eq(mockBody),
-                    anyString(),
+                    eq(mockMethods),
                     eq(mockException)
             );
         }
