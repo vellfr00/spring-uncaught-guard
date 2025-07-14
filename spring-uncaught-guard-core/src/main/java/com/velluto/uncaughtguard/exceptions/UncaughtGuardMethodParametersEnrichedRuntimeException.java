@@ -10,38 +10,39 @@ import java.util.List;
  * This exception is used to enrich the original RuntimeException with the method signature and parameters
  * that caused the exception to be thrown, allowing for better debugging and tracing of issues.
  * <p>
- * It extends RuntimeException and maintains the original exception's class name, message,
- * and stack trace, along with a list of methods that threw the exception.
- * Since the original exception class will be lost in the process of wrapping,
- * this exception also stores the original exception class name and appends it by default
- * in the exception message. The original exception message is therefore also stored.
+ * It extends RuntimeException and maintains a reference to the original exception,
+ * alongside a list of methods that were involved in throwing the exception.
  */
 public class UncaughtGuardMethodParametersEnrichedRuntimeException extends RuntimeException {
     private final List<UncaughtGuardThrowingMethod> throwingMethods;
-    private final String originalExceptionClassName;
-    private final String originalExceptionMessage;
+    private final RuntimeException originalExceptionReference;
 
     public UncaughtGuardMethodParametersEnrichedRuntimeException(
-            RuntimeException originalException,
+            RuntimeException exception,
             String throwingMethodSignature,
             Object[] throwingMethodArgs
     ) {
-        super(buildMessage(originalException));
-        cloneOriginalException(originalException);
+        super();
 
-        this.throwingMethods = buildThrowingMethodsTrace(originalException, throwingMethodSignature, throwingMethodArgs);
-        this.originalExceptionClassName = getOriginalExceptionClassName(originalException);
-        this.originalExceptionMessage = getOriginalExceptionMessage(originalException);
+        this.originalExceptionReference = getOriginalExceptionReference(exception);
+        this.throwingMethods = buildThrowingMethodsTrace(exception, throwingMethodSignature, throwingMethodArgs);
+    }
+
+    private static RuntimeException getOriginalExceptionReference(RuntimeException receivedException) {
+        if (receivedException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException)
+            return enrichedRuntimeException.getOriginalExceptionReference();
+        else
+            return receivedException;
     }
 
     private static List<UncaughtGuardThrowingMethod> buildThrowingMethodsTrace(
-            RuntimeException originalException,
+            RuntimeException receivedException,
             String throwingMethodSignature,
             Object[] throwingMethodArgs
     ) {
         List<UncaughtGuardThrowingMethod> throwingMethods;
-        if (originalException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException)
-            throwingMethods = ((UncaughtGuardMethodParametersEnrichedRuntimeException) originalException).getThrowingMethods();
+        if (receivedException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException)
+            throwingMethods = enrichedRuntimeException.getThrowingMethods();
         else
             throwingMethods = new LinkedList<>();
 
@@ -49,48 +50,8 @@ public class UncaughtGuardMethodParametersEnrichedRuntimeException extends Runti
         return throwingMethods;
     }
 
-    private static String buildMessage(RuntimeException originalException) {
-        if (originalException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException) {
-            return originalException.getMessage();
-        } else {
-            return "[ACTUAL Exception: " + originalException.getClass().getName() + "] " + originalException.getMessage();
-        }
-    }
-
-    private static String getOriginalExceptionMessage(RuntimeException originalException) {
-        if (originalException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException) {
-            return ((UncaughtGuardMethodParametersEnrichedRuntimeException) originalException).getOriginalExceptionMessage();
-        } else {
-            return originalException.getMessage();
-        }
-    }
-
-    private static String getOriginalExceptionClassName(RuntimeException originalException) {
-        if (originalException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException) {
-            return ((UncaughtGuardMethodParametersEnrichedRuntimeException) originalException).getOriginalExceptionClassName();
-        } else {
-            return originalException.getClass().getName();
-        }
-    }
-
-    private void cloneOriginalException(RuntimeException originalException) {
-        this.setStackTrace(originalException.getStackTrace());
-        this.initCause(originalException.getCause());
-
-        for (Throwable suppressed : originalException.getSuppressed())
-            this.addSuppressed(suppressed);
-    }
-
     public List<UncaughtGuardThrowingMethod> getThrowingMethods() {
         return throwingMethods;
-    }
-
-    public String getOriginalExceptionClassName() {
-        return originalExceptionClassName;
-    }
-
-    public String getOriginalExceptionMessage() {
-        return originalExceptionMessage;
     }
 
     public String getJSONSerializedThrowingMethods() {
@@ -103,5 +64,9 @@ public class UncaughtGuardMethodParametersEnrichedRuntimeException extends Runti
         } catch (Exception e) {
             return "Error serializing throwing methods: " + e.getMessage();
         }
+    }
+
+    public RuntimeException getOriginalExceptionReference() {
+        return originalExceptionReference;
     }
 }

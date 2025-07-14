@@ -1,10 +1,14 @@
 package com.velluto.uncaughtguard.strategies;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.velluto.uncaughtguard.exceptions.UncaughtGuardMethodParametersEnrichedRuntimeException;
 import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
+import com.velluto.uncaughtguard.models.UncaughtGuardThrowingMethod;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 
 /**
  * A logging strategy for uncaught exceptions that logs the details to the standard error output.
@@ -19,13 +23,6 @@ public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggin
         return stringWriter.toString();
     }
 
-    private String getThrowingMethodsLoggableString(RuntimeException exception) {
-        if (!(exception instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException))
-            return "";
-
-        return enrichedRuntimeException.getJSONSerializedThrowingMethods();
-    }
-
     @Override
     public void log(UncaughtGuardExceptionTrace exceptionTrace) {
         System.err.println(
@@ -37,7 +34,7 @@ public class UncaughtGuardSystemErrorLoggingStrategy extends UncaughtGuardLoggin
                         "Query Params : " + exceptionTrace.getQueryParams().toString() + '\n' +
                         "Headers      : " + exceptionTrace.getHeaders().toString() + '\n' +
                         "Body         : " + '\n' + exceptionTrace.getBody() + '\n' +
-                        "Methods      : " + '\n' + getThrowingMethodsLoggableString(exceptionTrace.getException()) + '\n' +
+                        "Methods      : " + '\n' + exceptionTrace.getJSONSerializedThrowingMethods() + '\n' +
                         "Exception    : " + '\n' + getLoggableExceptionStackTraceString(exceptionTrace.getException())
         );
     }

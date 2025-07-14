@@ -25,20 +25,6 @@ public class UncaughtGuardExceptionTraceExceptionJsonSerializer extends JsonSeri
         writeException(gen, value, seen);
     }
 
-    private String getThrownExceptionClassName(Throwable ex) {
-        if (ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException)
-            return ((UncaughtGuardMethodParametersEnrichedRuntimeException) ex).getOriginalExceptionClassName();
-
-        return ex.getClass().getName();
-    }
-
-    private String getThrownExceptionMessage(Throwable ex) {
-        if (ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException)
-            return ((UncaughtGuardMethodParametersEnrichedRuntimeException) ex).getOriginalExceptionMessage();
-
-        return ex.getMessage() != null ? ex.getMessage() : "No message available";
-    }
-
     private void writeException(JsonGenerator gen, Throwable ex, Set<Throwable> seen) throws IOException {
         if (seen.contains(ex)) {
             gen.writeStartObject();
@@ -50,15 +36,11 @@ public class UncaughtGuardExceptionTraceExceptionJsonSerializer extends JsonSeri
 
         gen.writeStartObject();
 
-        if (ex instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException)
-            gen.writeObjectField("throwingMethod", enrichedRuntimeException.getThrowingMethods());
-
-        gen.writeStringField("thrownException", getThrownExceptionClassName(ex));
-        gen.writeStringField("message", getThrownExceptionMessage(ex));
+        gen.writeStringField("thrownException", ex.getClass().getName());
+        gen.writeStringField("message", ex.getMessage());
         gen.writeArrayFieldStart("stackTrace");
-        for (StackTraceElement element : ex.getStackTrace()) {
+        for (StackTraceElement element : ex.getStackTrace())
             gen.writeString(element.toString());
-        }
 
         gen.writeEndArray();
 

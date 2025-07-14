@@ -9,13 +9,6 @@ import com.velluto.uncaughtguard.models.UncaughtGuardExceptionTrace;
  * It requires the SLF4J library to be included in the project dependencies.
  */
 public class UncaughtGuardSlf4jLoggingStrategy extends UncaughtGuardLoggingStrategy {
-    private String getThrowingMethodsLoggableString(RuntimeException exception) {
-        if (!(exception instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException))
-            return "";
-
-        return enrichedRuntimeException.getJSONSerializedThrowingMethods();
-    }
-
     @Override
     public void log(UncaughtGuardExceptionTrace exceptionTrace) {
         // Get the class that threw the exception
@@ -48,7 +41,7 @@ public class UncaughtGuardSlf4jLoggingStrategy extends UncaughtGuardLoggingStrat
                 exceptionTrace.getQueryParams().toString(),
                 exceptionTrace.getHeaders().toString(),
                 exceptionTrace.getBody(),
-                getThrowingMethodsLoggableString(exceptionTrace.getException()),
+                exceptionTrace.getJSONSerializedThrowingMethods(),
                 exceptionTrace.getException()
         );
     }

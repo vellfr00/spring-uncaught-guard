@@ -11,13 +11,6 @@ import java.util.logging.Logger;
  * This strategy logs the exception details using the Logger associated with the class and method that threw the exception.
  */
 public class UncaughtGuardJavaLoggerLoggingStrategy extends UncaughtGuardLoggingStrategy {
-    private String getThrowingMethodsLoggableString(RuntimeException exception) {
-        if (!(exception instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException))
-            return "";
-
-        return enrichedRuntimeException.getJSONSerializedThrowingMethods();
-    }
-
     @Override
     protected void log(UncaughtGuardExceptionTrace exceptionTrace) {
         // get the class that threw the exception
@@ -55,7 +48,7 @@ public class UncaughtGuardJavaLoggerLoggingStrategy extends UncaughtGuardLogging
                         exceptionTrace.getQueryParams().toString(),
                         exceptionTrace.getHeaders().toString(),
                         exceptionTrace.getBody(),
-                        getThrowingMethodsLoggableString(exceptionTrace.getException())
+                        exceptionTrace.getJSONSerializedThrowingMethods()
                 ),
                 exceptionTrace.getException()
         );

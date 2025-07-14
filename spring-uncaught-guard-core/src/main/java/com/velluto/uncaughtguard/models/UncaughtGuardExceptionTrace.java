@@ -1,7 +1,11 @@
 package com.velluto.uncaughtguard.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.velluto.uncaughtguard.exceptions.UncaughtGuardMethodParametersEnrichedRuntimeException;
 import com.velluto.uncaughtguard.serializers.UncaughtGuardExceptionTraceBodyJsonSerializer;
 import com.velluto.uncaughtguard.serializers.UncaughtGuardExceptionTraceExceptionJsonSerializer;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +43,7 @@ public class UncaughtGuardExceptionTrace {
     private final Map<String, String> headers;
     @JsonSerialize(using = UncaughtGuardExceptionTraceBodyJsonSerializer.class)
     private final String body;
+    private final List<UncaughtGuardThrowingMethod> throwingMethods;
     @JsonSerialize(using = UncaughtGuardExceptionTraceExceptionJsonSerializer.class)
     private final RuntimeException exception;
 
@@ -50,7 +55,22 @@ public class UncaughtGuardExceptionTrace {
         this.queryParams = getQueryParamsFromRequest(request);
         this.headers = getHeadersFromRequest(request);
         this.body = getBodyFromRequest(request, isEnableLogRequestBody);
-        this.exception = exception;
+        this.throwingMethods = retrieveThrowingMethods(exception);
+        this.exception = retrieveOriginalException(exception);
+    }
+
+    private static List<UncaughtGuardThrowingMethod> retrieveThrowingMethods(RuntimeException receivedException) {
+        if (receivedException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException)
+            return enrichedRuntimeException.getThrowingMethods();
+        else
+            return new ArrayList<>(0);
+    }
+
+    private static RuntimeException retrieveOriginalException(RuntimeException receivedException) {
+        if (receivedException instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException)
+            return enrichedRuntimeException.getOriginalExceptionReference();
+        else
+            return receivedException;
     }
 
     private Map<String, String> getQueryParamsFromRequest(HttpServletRequest request) {
@@ -139,5 +159,24 @@ public class UncaughtGuardExceptionTrace {
 
     public UncaughtGuardExceptionTraceHttpResponseDTO getHttpResponseDTO(String httpResponseErrorMessage) {
         return new UncaughtGuardExceptionTraceHttpResponseDTO(incidentTimestamp, traceId, httpResponseErrorMessage);
+    }
+
+    public List<UncaughtGuardThrowingMethod> getThrowingMethods() {
+        return throwingMethods;
+    }
+
+    @JsonIgnore
+    public String getJSONSerializedThrowingMethods() {
+        if (throwingMethods == null || throwingMethods.isEmpty())
+            return "[]";
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper
+                        .writerWithDefaultPrettyPrinter()
+                        .writeValueAsString(throwingMethods);
+        } catch (JsonProcessingException e) {
+            return "Error serializing throwing methods: " + e.getMessage();
+        }
     }
 }
