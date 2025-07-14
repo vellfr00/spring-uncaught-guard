@@ -55,20 +55,6 @@ public abstract class UncaughtGuardFileSystemAbstractLoggingStrategy extends Unc
         this.filePath = filePath;
     }
 
-    private String getLoggableExceptionStackTraceString(RuntimeException exception) {
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter printWriter = new PrintWriter(stringWriter);
-        exception.printStackTrace(printWriter);
-        return stringWriter.toString();
-    }
-
-    private String getThrowingMethodsLoggableString(RuntimeException exception) {
-        if (!(exception instanceof UncaughtGuardMethodParametersEnrichedRuntimeException enrichedRuntimeException))
-            return "";
-
-        return enrichedRuntimeException.getJSONSerializedThrowingMethods();
-    }
-
     private String getLoggableExceptionTraceString(UncaughtGuardExceptionTrace exceptionTrace) {
         StringBuilder sb = new StringBuilder();
 
@@ -80,8 +66,8 @@ public abstract class UncaughtGuardFileSystemAbstractLoggingStrategy extends Unc
         sb.append("Query Params : ").append(exceptionTrace.getQueryParams().toString()).append('\n');
         sb.append("Headers      : ").append(exceptionTrace.getHeaders().toString()).append('\n');
         sb.append("Body         : ").append('\n').append(exceptionTrace.getBody()).append('\n');
-        sb.append("Methods      : ").append('\n').append(getThrowingMethodsLoggableString(exceptionTrace.getException())).append('\n');
-        sb.append("Exception    : ").append('\n').append(getLoggableExceptionStackTraceString(exceptionTrace.getException()));
+        sb.append("Methods      : ").append('\n').append(exceptionTrace.getJSONSerializedThrowingMethods()).append('\n');
+        sb.append("Exception    : ").append('\n').append(exceptionTrace.getLoggableExceptionStackTrace());
 
         return sb.toString();
     }
