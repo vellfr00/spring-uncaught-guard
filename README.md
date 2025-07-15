@@ -2,6 +2,8 @@
 
 The Guardian for uncaught exceptions in your Spring REST services.
 
+![Spring Uncaught Guard Presentation](./.assets/spring-uncaught-guard-presentation.gif)
+
 ## 📑 Table of Contents
 
 - [📝 Overview](#-overview)
